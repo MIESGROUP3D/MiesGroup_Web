@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Torre — demo</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0b0a; overflow: hidden; touch-action: none; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #ui { position: fixed; inset: 0; pointer-events: none; font-family: ui-monospace, Menlo, Consolas, monospace; color: #ece7df; }
+  #score { position: absolute; top: 20px; left: 0; right: 0; text-align: center; font-size: 56px; font-weight: 700; letter-spacing: .04em; }
+  #msg { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; opacity: .7; }
+</style>
+</head>
+<body>
+<!--
+  JUEGO DE EJEMPLO — solo para validar la integración (carga, pantalla completa,
+  controles, móvil). Se reemplaza por el build real del cliente en esta misma carpeta
+  o en una nueva /public/games/<slug>/.
+  Envía window.parent.postMessage({ type: "game:ready" }) al cargar: el sitio lo usa
+  para ocultar la pantalla de carga.
+-->
+<canvas id="c"></canvas>
+<div id="ui"><div id="score">0</div><div id="msg">Clic · toque · espacio para soltar</div></div>
+<script>
+(() => {
+  const c = document.getElementById('c');
+  const ctx = c.getContext('2d');
+  const scoreEl = document.getElementById('score');
+  const msgEl = document.getElementById('msg');
+  const SLAB_H = 26;
+  let W, H, dpr;
+  let stack, moving, dir, speed, camY, targetCam, over, falling, overAt = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = c.clientWidth; H = c.clientHeight;
+    c.width = W * dpr; c.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function reset() {
+    const w = Math.min(W * 0.5, 320);
+    stack = [{ x: (W - w) / 2, w, hue: 0 }];
+    falling = [];
+    over = false; camY = 0; targetCam = 0; speed = 3.2;
+    spawn();
+    scoreEl.textContent = '0';
+    msgEl.textContent = 'Clic · toque · espacio para soltar';
+  }
+
+  // La losa oscila a ambos lados de la anterior (±1.2 anchos), como el clásico "stack"
+  function spawn() {
+    const top = stack[stack.length - 1];
+    dir = stack.length % 2 ? 1 : -1;
+    const range = top.w * 1.2;
+    moving = { x: dir > 0 ? top.x - range : top.x + range, w: top.w, minX: top.x - range, maxX: top.x + range };
+  }
+
+  function drop() {
+    if (over) { if (performance.now() - overAt > 500) reset(); return; }
+    const top = stack[stack.length - 1];
+    const left = Math.max(moving.x, top.x);
+    const right = Math.min(moving.x + moving.w, top.x + top.w);
+    const overlap = right - left;
+    if (overlap <= 0) {
+      falling.push({ x: moving.x, w: moving.w, y: yOf(stack.length), vy: 0 });
+      over = true; overAt = performance.now();
+      msgEl.textContent = 'Fin · clic o R para reiniciar';
+      return;
+    }
+    // recorte: la parte sobrante cae
+    if (moving.x < left) falling.push({ x: moving.x, w: left - moving.x, y: yOf(stack.length), vy: 0 });
+    if (moving.x + moving.w > right) falling.push({ x: right, w: moving.x + moving.w - right, y: yOf(stack.length), vy: 0 });
+    // tolerancia: si queda casi perfecto, se alinea
+    const perfect = Math.abs(moving.x - top.x) < 4;
+    stack.push(perfect ? { x: top.x, w: top.w } : { x: left, w: overlap });
+    scoreEl.textContent = String(stack.length - 1);
+    speed = Math.min(speed + 0.12, 7);
+    if (stack.length * SLAB_H > H * 0.45) targetCam = stack.length * SLAB_H - H * 0.45;
+    spawn();
+  }
+
+  const yOf = (i) => H - 96 - i * SLAB_H;
+
+  function slab(x, y, w, t) {
+    // losa: vidrio con montantes + canto claro (estilo Mies)
+    const g = ctx.createLinearGradient(0, y, 0, y + SLAB_H);
+    g.addColorStop(0, `hsl(${30 + t * 3}, 25%, ${22 + (t % 5)}%)`);
+    g.addColorStop(1, '#141312');
+    ctx.fillStyle = g; ctx.fillRect(x, y + 4, w, SLAB_H - 4);
+    ctx.fillStyle = 'rgba(255,200,130,.85)';
+    for (let xx = x + 6; xx < x + w - 10; xx += 18) {
+      if (((xx * 13 + t * 7) | 0) % 5 === 0) ctx.fillRect(xx, y + 8, 12, SLAB_H - 12);
+    }
+    ctx.strokeStyle = 'rgba(0,0,0,.5)';
+    for (let xx = x; xx < x + w; xx += 18) { ctx.beginPath(); ctx.moveTo(xx + .5, y + 4); ctx.lineTo(xx + .5, y + SLAB_H); ctx.stroke(); }
+    ctx.fillStyle = '#d9d2c5'; ctx.fillRect(x - 3, y, w + 6, 4);
+  }
+
+  function frame() {
+    camY += (targetCam - camY) * 0.08;
+    // cielo
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#0b0b12'); sky.addColorStop(1, '#3a2a22');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.translate(0, camY);
+    // suelo
+    ctx.fillStyle = '#0b0b0a'; ctx.fillRect(0, H - 70, W, 400);
+    stack.forEach((s, i) => slab(s.x, yOf(i), s.w, i));
+    if (!over) {
+      moving.x += dir * speed;
+      if (moving.x > moving.maxX) { moving.x = moving.maxX; dir = -1; }
+      if (moving.x < moving.minX) { moving.x = moving.minX; dir = 1; }
+      slab(moving.x, yOf(stack.length), moving.w, stack.length);
+    }
+    falling = falling.filter((f) => f.y < H + 400);
+    falling.forEach((f) => { f.vy += 0.6; f.y += f.vy; ctx.globalAlpha = .8; slab(f.x, f.y, f.w, 1); ctx.globalAlpha = 1; });
+    ctx.restore();
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  window.addEventListener('pointerdown', drop);
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); drop(); }
+    if (e.key === 'r' || e.key === 'R') reset();
+  });
+
+  resize(); reset(); frame();
+  try { window.parent.postMessage({ type: 'game:ready' }, '*'); } catch (_) {}
+})();
+</script>
+</body>
+</html>
