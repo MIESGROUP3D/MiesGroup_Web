@@ -34,7 +34,25 @@ function writeService(value: ServiceSlug | "all") {
   window.dispatchEvent(new Event(URL_EVENT));
 }
 
-/** Portafolio: una línea de filtros en texto + grilla de 2 columnas. */
+/*
+ * Patrón bento de 6 celdas que encaja exacto en 12 columnas × 4 filas:
+ *   ┌────────────┬──────┐   ┌──────┬────────────┐
+ *   │            │  B   │   │      │     E      │
+ *   │     A      ├──────┤   │  D   ├────────────┤
+ *   │            │  C   │   │      │     F      │
+ *   └────────────┴──────┘   └──────┴────────────┘
+ * En móvil todas las celdas son una columna 4:3.
+ */
+const bento = [
+  { className: "md:col-span-8 md:row-span-2", sizes: "(min-width: 768px) 66vw, 100vw" },
+  { className: "md:col-span-4", sizes: "(min-width: 768px) 33vw, 100vw" },
+  { className: "md:col-span-4", sizes: "(min-width: 768px) 33vw, 100vw" },
+  { className: "md:col-span-4 md:row-span-2", sizes: "(min-width: 768px) 33vw, 100vw" },
+  { className: "md:col-span-8", sizes: "(min-width: 768px) 66vw, 100vw" },
+  { className: "md:col-span-8", sizes: "(min-width: 768px) 66vw, 100vw" },
+];
+
+/** Portafolio: una línea de filtros en texto + grilla bento. */
 export function ProjectGrid({ projects }: { projects: Project[] }) {
   const search = useSyncExternalStore(subscribe, readSearch, () => "");
   const usedServices = useMemo(() => services.filter((s) => projects.some((p) => p.services.includes(s.slug))), [projects]);
@@ -65,20 +83,27 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         </p>
       </div>
 
-      <ul className="grid gap-x-6 gap-y-12 md:grid-cols-2">
-        <AnimatePresence initial={false} mode="popLayout">
-          {filtered.map((p, i) => (
-            <motion.li
-              key={p.slug}
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-            >
-              <ProjectCard project={p} priority={i < 2} />
-            </motion.li>
-          ))}
+      {/* Bento (ref. Framer "Bento Gallery"): 12 columnas, filas de alto fijo.
+          `grid-flow-dense` rellena huecos cuando el filtro deja listas cortas. */}
+      <ul className="grid gap-3 md:grid-flow-dense md:auto-rows-[clamp(11rem,17vw,19rem)] md:grid-cols-12 md:gap-4">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((p, i) => {
+            const cell = bento[i % bento.length];
+            return (
+              <motion.li
+                key={p.slug}
+                layout
+                className={cell.className}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.7, ease: [0.39, 0.14, 0.26, 1], delay: (i % 3) * 0.06 }}
+              >
+                <ProjectCard project={p} priority={i < 2} sizes={cell.sizes} />
+              </motion.li>
+            );
+          })}
         </AnimatePresence>
       </ul>
     </div>

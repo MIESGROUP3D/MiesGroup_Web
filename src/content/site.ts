@@ -27,9 +27,9 @@ export const site = {
   /** ⚠ Pendiente: correo que recibe los formularios */
   email: "contacto@miesgroup3d.com",
   locations: [
-    { city: "Manizales", country: "Colombia", code: "CO", hq: true },
-    { city: "Córdoba", country: "Argentina", code: "AR" },
-    { city: "Los Ángeles", country: "Estados Unidos", code: "US" },
+    { city: "Manizales", country: "Colombia", code: "CO", timeZone: "America/Bogota", hq: true },
+    { city: "Córdoba", country: "Argentina", code: "AR", timeZone: "America/Argentina/Cordoba" },
+    { city: "Los Ángeles", country: "Estados Unidos", code: "US", timeZone: "America/Los_Angeles" },
   ],
   social: {
     youtube: "https://www.youtube.com/@miesgrouparq6892",

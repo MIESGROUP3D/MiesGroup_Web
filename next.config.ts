@@ -29,9 +29,13 @@ const legacyRedirects: Array<[string, string]> = [
 ];
 
 const nextConfig: NextConfig = {
+  // Oculta el botón "N" de Next.js en desarrollo (tapaba el hero en las demos).
+  // Los errores de compilación y de ejecución se siguen mostrando.
+  devIndicators: false,
+
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [60, 75, 90],
+    qualities: [60, 70, 75, 80, 90],
     deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
   },
 

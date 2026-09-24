@@ -95,17 +95,13 @@
 /*
  * VIEW TRANSITIONS (React <ViewTransition> + API del navegador)
  * - .page: la página saliente se desvanece; la entrante aparece.
- * - .morph: la portada de un proyecto "viaja" de la grilla a la página del proyecto.
+ * (La expansión de proyectos y servicios la hace Motion con layoutId.)
  */
 ::view-transition-old(.page) {
   animation: 160ms ease-out both vt-fade-out;
 }
 ::view-transition-new(.page) {
   animation: 360ms ease-out 100ms both vt-fade-in;
-}
-::view-transition-group(.morph) {
-  animation-duration: 650ms;
-  animation-timing-function: var(--ease-out-expo);
 }
 @keyframes vt-fade-out {
   to { opacity: 0; }
@@ -119,4 +115,41 @@
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+/*
+ * MODAL DE PROYECTO (ProjectModal): lo marcado con data-fade aparece cuando la
+ * portada ya "aterrizó" y desaparece primero al cerrar.
+ */
+.modal-panel [data-fade] {
+  animation: modal-fade 0.45s ease-out 0.3s both;
+}
+.modal-panel[data-closing] [data-fade] {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
+@keyframes modal-fade {
+  from { opacity: 0; transform: translateY(12px); }
+}
+
+/* Barra de progreso del hero (HomeHero): su final avanza la diapositiva */
+@keyframes hero-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/*
+ * INTRO DE PARTÍCULAS (IntroParticles)
+ * - html.intro-seen: ya se vio en esta sesión (lo marca un script en <head>).
+ * - Movimiento reducido: nunca se muestra.
+ * - Respaldo: si el JS no llega a quitarla, se desvanece sola a los 4,5 s.
+ */
+html.intro-seen .intro { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+}
+.intro { animation: intro-failsafe 0.6s ease-out 4.5s forwards; }
+@keyframes intro-failsafe {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
 }

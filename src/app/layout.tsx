@@ -4,6 +4,8 @@ import { ViewTransition } from "react";
 import "@fontsource-variable/instrument-sans";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { IntroParticles } from "@/components/IntroParticles";
+import { SideMenu } from "@/components/SideMenu";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
@@ -50,18 +52,32 @@ const jsonLd = {
   address: site.locations.map((l) => ({ "@type": "PostalAddress", addressLocality: l.city, addressCountry: l.code })),
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+const introScript = `try{if(sessionStorage.getItem("mies-intro"))document.documentElement.classList.add("intro-seen")}catch(e){}`;
+
+export default function RootLayout({ children, modal }: LayoutProps<"/">) {
   return (
-    <html lang="es">
+    // suppressHydrationWarning: el script de abajo agrega la clase intro-seen antes de hidratar
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        {/* Intro de partículas: si ya se vio en esta sesión, ocultarla antes del primer pintado */}
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
       <body className="min-h-dvh">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <IntroParticles />
         <Providers>
-          <Header />
-          {/* Transición suave entre páginas (View Transitions API; sin soporte, navega normal) */}
-          <ViewTransition default="page">
-            <main id="contenido">{children}</main>
-          </ViewTransition>
-          <Footer />
+          {/* Pestaña lateral de navegación; desplaza este contenido al abrirse */}
+          <SideMenu>
+            <Header />
+            {/* Transición suave entre páginas (View Transitions API; sin soporte, navega normal) */}
+            <ViewTransition default="page">
+              <main id="contenido">{children}</main>
+            </ViewTransition>
+            <Footer />
+          </SideMenu>
+          {/* Fuera de SideMenu: son position: fixed */}
+          {/* Slot @modal: proyecto abierto sobre la página (ruta interceptada) */}
+          {modal}
           <WhatsAppFab />
         </Providers>
       </body>
