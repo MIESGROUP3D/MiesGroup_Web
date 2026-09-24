@@ -9,16 +9,23 @@ import type { NextConfig } from "next";
  * - redirects: URLs del WordPress actual → nuevas rutas (301/308 permanentes)
  *   para no perder posicionamiento SEO.
  */
+const serviceSlugs = ["3d-rendering", "cgi-animation", "360-virtual-tour", "metaverse-vr", "web3d", "ai"];
+
 const legacyRedirects: Array<[string, string]> = [
-  ["/3d-rendering", "/servicios/3d-rendering"],
-  ["/cgi-animation", "/servicios/cgi-animation"],
-  ["/360-virtual-tour", "/servicios/360-virtual-tour"],
-  ["/metaverse-vr", "/servicios/metaverse-vr"],
-  ["/que-es-web3d", "/servicios/web3d"],
-  ["/ai", "/servicios/ai"],
+  // WordPress actual
+  ["/3d-rendering", "/servicios#3d-rendering"],
+  ["/cgi-animation", "/servicios#cgi-animation"],
+  ["/360-virtual-tour", "/servicios#360-virtual-tour"],
+  ["/metaverse-vr", "/servicios#metaverse-vr"],
+  ["/que-es-web3d", "/servicios#web3d"],
+  ["/ai", "/servicios#ai"],
   ["/video-juegos", "/videojuegos"],
-  ["/about-us", "/nosotros"],
+  ["/about-us", "/estudio"],
   ["/privacy-and-data-policy", "/privacidad"],
+  // estructura anterior del mockup → estructura mínima (ref. mir.no)
+  ["/proyectos", "/"],
+  ["/nosotros", "/estudio"],
+  ...serviceSlugs.map((s): [string, string] => [`/servicios/${s}`, `/servicios#${s}`]),
 ];
 
 const nextConfig: NextConfig = {

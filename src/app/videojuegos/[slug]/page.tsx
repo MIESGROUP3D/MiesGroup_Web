@@ -21,13 +21,13 @@ export default async function GamePage({ params }: PageProps<"/videojuegos/[slug
   if (!game) notFound();
 
   return (
-    <div className="shell pt-32 md:pt-36">
+    <div className="shell pt-6">
       <nav aria-label="Migas de pan" className="eyebrow">
-        <Link href="/" className="hover:text-bone">Inicio</Link> / <Link href="/videojuegos" className="hover:text-bone">Videojuegos</Link> / <span className="text-bone">{game.title}</span>
+        <Link href="/" className="hover:text-ink">Inicio</Link> / <Link href="/videojuegos" className="hover:text-ink">Videojuegos</Link> / <span className="text-ink">{game.title}</span>
       </nav>
       <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <h1 className="display text-[clamp(3rem,8vw,7rem)]">{game.title}</h1>
-        <p className="max-w-md text-bone-dim md:pb-3">{game.summary}</p>
+        <h1 className="display text-3xl md:text-4xl">{game.title}</h1>
+        <p className="max-w-md text-ink-soft md:pb-3">{game.summary}</p>
       </div>
       <div className="mt-10">
         <GameEmbed game={game} />

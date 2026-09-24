@@ -13,7 +13,7 @@ import type { MediaImage, VideoRef } from "@/content/types";
  * ancho de banda del usuario.
  */
 export function embedUrl(v: VideoRef) {
-  if (v.provider === "vimeo") return `https://player.vimeo.com/video/${v.id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0&color=c39462`;
+  if (v.provider === "vimeo") return `https://player.vimeo.com/video/${v.id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0&color=ffffff`;
   if (v.provider === "youtube") return `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1`;
   return v.src;
 }
@@ -37,7 +37,7 @@ export function VideoFacade({
   const ytThumb = video.provider === "youtube" ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg` : null;
 
   return (
-    <div className={cn("group relative aspect-video overflow-hidden bg-ink-3", className)}>
+    <div className={cn("group relative aspect-video overflow-hidden bg-paper-2", className)}>
       {active ? (
         video.provider === "file" ? (
           <video src={video.src} controls autoPlay playsInline className="absolute inset-0 size-full bg-black object-contain" />
@@ -58,15 +58,15 @@ export function VideoFacade({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={ytThumb} alt="" loading="lazy" className="absolute inset-0 size-full object-cover opacity-80" />
           ) : (
-            <div className="absolute inset-0 blueprint bg-gradient-to-br from-ink-3 to-ink" />
+            <div className="absolute inset-0 bg-gradient-to-br from-paper-2 to-paper" />
           )}
-          <span className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
-          <span className="absolute left-1/2 top-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-bone/50 bg-ink/40 backdrop-blur-md transition-all duration-500 group-hover:scale-110 group-hover:border-bronze group-hover:bg-bronze group-hover:text-ink">
+          <span className="absolute inset-0 bg-gradient-to-t from-paper/80 via-paper/10 to-transparent" />
+          <span className="absolute left-1/2 top-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-ink/50 bg-paper/40 backdrop-blur-md transition-all duration-500 group-hover:scale-110 group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
             <Play className="ml-1 size-7" fill="currentColor" />
           </span>
           <span className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
             <span className="text-sm font-medium">{video.title}</span>
-            <span className="font-mono text-[0.65rem] uppercase tracking-widest text-bone-dim">{video.provider === "file" ? "MP4" : video.provider}</span>
+            <span className=" text-[0.65rem] text-ink-soft">{video.provider === "file" ? "MP4" : video.provider}</span>
           </span>
         </button>
       )}

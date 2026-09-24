@@ -38,15 +38,15 @@ npm run start
 ```
 src/
 ├── app/                      # Rutas (una carpeta = una URL)
-│   ├── page.tsx              # Home
-│   ├── servicios/[slug]/     # 6 servicios, una sola plantilla
-│   ├── proyectos/            # Portafolio filtrable + detalle [slug]
+│   ├── page.tsx              # Home = portafolio filtrable (ref. mir.no)
+│   ├── servicios/            # Los 6 servicios en una página (anclas #slug)
+│   ├── proyectos/[slug]/     # Detalle de proyecto (/proyectos redirige a /)
 │   ├── videojuegos/          # Listado + página del juego [slug]
-│   ├── channel/  conferencias/  nosotros/  contacto/  privacidad/
+│   ├── estudio/  contacto/  channel/  conferencias/  privacidad/
 │   ├── api/contact/route.ts  # POST del formulario
 │   ├── sitemap.ts  robots.ts
 │   └── layout.tsx            # Header, footer, fuentes, SEO global, JSON-LD
-├── components/               # UI reutilizable (Header, Hero, Gallery, GameEmbed, …)
+├── components/               # UI reutilizable (Header, ProjectGrid, GameEmbed, …)
 ├── content/                  # ← TODO EL CONTENIDO EDITABLE
 │   ├── site.ts               # Teléfonos, WhatsApp, redes, sedes, hero, misión/visión
 │   ├── services.ts           # Servicios
@@ -106,7 +106,7 @@ Las URLs del WordPress actual (`/about-us`, `/3d-rendering`, `/video-juegos`, �
 ## Antes de producción
 
 - [ ] Quitar `robots: { index: false }` en `src/app/layout.tsx` y actualizar `src/app/robots.ts` (hoy bloquean la indexación a propósito).
-- [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, hitos de "Nosotros", política de privacidad.
+- [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, textos de "Estudio", política de privacidad.
 - [ ] Logo SVG oficial, paleta y tipografías del cliente.
 - [ ] Confirmar el número oficial de WhatsApp y el correo que recibe el formulario.
 - [ ] Configurar Resend y Cloudflare Turnstile (anti-spam).

@@ -17,11 +17,11 @@ export default function ChannelPage() {
   return (
     <>
       <PageHeader
-        crumbs={[{ label: "Channel" }]}
+       
         title="Channel"
         intro="Reels, animaciones y making-of del estudio."
         meta={
-          <a href={site.social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 border border-line px-5 py-3 text-sm uppercase tracking-[0.14em] hover:border-bronze hover:text-bronze">
+          <a href={site.social.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 border border-line px-5 py-3 text-sm hover:border-ink hover:text-ink">
             <YoutubeIcon className="size-5" /> Suscribirse en YouTube <ArrowUpRight className="size-4" />
           </a>
         }

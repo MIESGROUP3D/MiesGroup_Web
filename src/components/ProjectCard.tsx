@@ -1,41 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/cn";
-import { categoryLabels } from "@/content/projects";
-import { serviceName } from "@/content/services";
+import { ViewTransition } from "react";
 import type { Project } from "@/content/types";
 
-export function ProjectCard({ project, index, size = "md", priority = false }: { project: Project; index: number; size?: "lg" | "md"; priority?: boolean }) {
+/** Tarjeta mínima: imagen + nombre + lugar y año. Nada más. */
+export function ProjectCard({ project, priority = false }: { project: Project; priority?: boolean }) {
   return (
-    <Link href={`/proyectos/${project.slug}`} className="group block" aria-label={`${project.title} — ${project.location}, ${project.year}`}>
-      <div className={cn("crosshair relative overflow-hidden bg-ink-3", size === "lg" ? "aspect-[16/10]" : "aspect-[4/3]")}>
-        <Image
-          src={project.cover.src}
-          alt={project.cover.alt}
-          fill
-          priority={priority}
-          quality={75}
-          sizes={size === "lg" ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 768px) 42vw, 100vw"}
-          className="object-cover transition duration-[1.2s] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        <span className="absolute right-4 top-4 grid size-11 translate-y-2 place-items-center bg-bronze text-ink opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <ArrowUpRight className="size-5" />
-        </span>
-        <span className="absolute bottom-4 left-4 flex flex-wrap gap-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-          {project.services.map((s) => (
-            <span key={s} className="bg-ink/70 px-2 py-1 font-mono text-[0.62rem] uppercase tracking-wider backdrop-blur">{serviceName(s)}</span>
-          ))}
-        </span>
+    <Link href={`/proyectos/${project.slug}`} className="group block">
+      <div className="relative aspect-[3/2] overflow-hidden bg-paper-2">
+        {/* mismo `name` que la portada de /proyectos/[slug]: la imagen viaja entre páginas */}
+        <ViewTransition name={`cover-${project.slug}`} share="morph" default="none">
+          <div className="absolute inset-0">
+            <Image
+              src={project.cover.src}
+              alt={project.cover.alt}
+              fill
+              priority={priority}
+              quality={75}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover transition-opacity duration-500 group-hover:opacity-90"
+            />
+          </div>
+        </ViewTransition>
       </div>
-      <div className="mt-4 flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-        <div className="flex items-baseline gap-4">
-          <span className="font-mono text-xs text-bronze">{String(index + 1).padStart(2, "0")}</span>
-          <h3 className="display text-3xl transition-colors group-hover:text-bronze md:text-4xl">{project.title}</h3>
-        </div>
-        <p className="font-mono sm:shrink-0 sm:text-right text-[0.7rem] uppercase tracking-wider text-muted">
-          {categoryLabels[project.category]} · {project.location} · {project.year}
+      <div className="mt-3 flex items-baseline justify-between gap-4">
+        <h2 className="font-medium group-hover:underline group-hover:underline-offset-4 group-focus-visible:underline">{project.title}</h2>
+        <p className="shrink-0 text-muted">
+          {project.location} · {project.year}
         </p>
       </div>
     </Link>

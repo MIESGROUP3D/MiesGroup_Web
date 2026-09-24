@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "Política de privacidad y datos" };
 export default function PrivacyPage() {
   return (
     <>
-      <PageHeader crumbs={[{ label: "Privacidad" }]} title={<>Privacidad<br />y datos</>} />
-      <section className="shell max-w-3xl space-y-6 text-bone-dim">
-        <p className="border border-dashed border-bronze/60 p-4 font-mono text-xs uppercase tracking-widest text-bronze">
+      <PageHeader title="Privacidad y datos" />
+      <section className="shell max-w-3xl space-y-6 text-ink-soft">
+        <p className="border border-dashed border-ink/60 p-4 text-xs text-ink">
           ⚠ Texto provisional. Reemplazar por la política vigente del cliente (miesgroup3d.com/privacy-and-data-policy), revisada por su asesor legal (Ley 1581 de 2012, Colombia).
         </p>
         <p>{site.legalName} trata los datos personales que envías a través de este sitio (nombre, correo, teléfono y mensaje) únicamente para responder tu solicitud y dar seguimiento comercial.</p>

@@ -64,9 +64,9 @@ export function GameEmbed({ game }: { game: Game }) {
 
   if (unsupported) {
     return (
-      <div className="border border-line bg-ink-2 p-6">
-        <p className="flex items-center gap-3 text-sm text-bone-dim">
-          <Smartphone className="size-5 text-bronze" /> Este juego está pensado para computador. Mira el gameplay mientras tanto:
+      <div className="border border-line bg-paper-2 p-6">
+        <p className="flex items-center gap-3 text-sm text-ink-soft">
+          <Smartphone className="size-5 text-ink" /> Este juego está pensado para computador. Mira el gameplay mientras tanto:
         </p>
         {game.trailer ? <VideoFacade video={game.trailer} fallbackPoster={game.cover} className="mt-5" /> : null}
       </div>
@@ -92,7 +92,7 @@ export function GameEmbed({ game }: { game: Game }) {
           {state !== "ready" && (
             <motion.div className="absolute inset-0" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
               <Image src={game.cover.src} alt={game.cover.alt} fill sizes="(min-width: 1024px) 75vw, 100vw" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-paper/20" />
               <div className="absolute inset-0 grid place-items-center">
                 {state === "idle" ? (
                   <button
@@ -100,22 +100,22 @@ export function GameEmbed({ game }: { game: Game }) {
                     onClick={() => setState("loading")}
                     className="group flex flex-col items-center gap-4"
                   >
-                    <span className="grid size-24 place-items-center rounded-full bg-bronze text-ink transition-transform duration-500 group-hover:scale-110">
+                    <span className="grid size-24 place-items-center rounded-full bg-ink text-paper transition-transform duration-500 group-hover:scale-110">
                       <Play className="ml-1 size-9" fill="currentColor" />
                     </span>
-                    <span className="display text-3xl">Jugar</span>
+                    <span className="display text-2xl">Jugar</span>
                   </button>
                 ) : (
                   <div className="w-64 text-center" role="status" aria-live="polite">
-                    <Gamepad2 className="mx-auto size-8 animate-pulse text-bronze" />
-                    <p className="mt-4 font-mono text-xs uppercase tracking-widest text-bone-dim">
+                    <Gamepad2 className="mx-auto size-8 animate-pulse text-ink" />
+                    <p className="mt-4 text-xs text-ink-soft">
                       Cargando {progress !== null ? `${Math.round(progress * 100)}%` : "…"}
                     </p>
                     <div className="mt-3 h-px w-full overflow-hidden bg-line">
                       {progress !== null ? (
-                        <div className="h-full bg-bronze transition-[width]" style={{ width: `${progress * 100}%` }} />
+                        <div className="h-full bg-ink transition-[width]" style={{ width: `${progress * 100}%` }} />
                       ) : (
-                        <motion.div className="h-full w-1/3 bg-bronze" animate={{ x: ["-100%", "300%"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }} />
+                        <motion.div className="h-full w-1/3 bg-ink" animate={{ x: ["-100%", "300%"] }} transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }} />
                       )}
                     </div>
                   </div>
@@ -127,7 +127,7 @@ export function GameEmbed({ game }: { game: Game }) {
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <ul className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-[0.7rem] uppercase tracking-wider text-muted">
+        <ul className="flex flex-wrap gap-x-6 gap-y-1 text-[0.7rem] text-muted">
           {game.controls.map((c) => (
             <li key={c}>{c}</li>
           ))}
@@ -137,7 +137,7 @@ export function GameEmbed({ game }: { game: Game }) {
             type="button"
             disabled={state === "idle"}
             onClick={() => { setNonce((n) => n + 1); setState("loading"); setProgress(null); }}
-            className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs uppercase tracking-widest hover:border-bronze hover:text-bronze disabled:opacity-40"
+            className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs hover:border-ink hover:text-ink disabled:opacity-40"
           >
             <RotateCcw className="size-4" /> Reiniciar
           </button>
@@ -145,7 +145,7 @@ export function GameEmbed({ game }: { game: Game }) {
             type="button"
             disabled={state === "idle"}
             onClick={toggleFs}
-            className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs uppercase tracking-widest hover:border-bronze hover:text-bronze disabled:opacity-40"
+            className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs hover:border-ink hover:text-ink disabled:opacity-40"
           >
             {fs ? <Minimize className="size-4" /> : <Maximize className="size-4" />} {fs ? "Salir" : "Pantalla completa"}
           </button>
