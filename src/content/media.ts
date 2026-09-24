@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/basePath";
 import type { MediaImage } from "./types";
 
 /**
@@ -6,7 +7,8 @@ import type { MediaImage } from "./types";
  * (next/image las usa para reservar espacio y evitar saltos de layout / CLS).
  */
 export function img(src: string, alt: string, width = 2000, height = 1250): MediaImage {
-  return { src, alt, width, height };
+  // withBase: en GitHub Pages el sitio vive en una subcarpeta (ver next.config.ts)
+  return { src: withBase(src), alt, width, height };
 }
 
 /** Atajo para las 4 imágenes de un proyecto placeholder */

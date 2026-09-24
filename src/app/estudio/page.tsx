@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ProjectLink } from "@/components/ProjectLink";
 import { TickerY } from "@/components/TickerY";
 import { VideoFacade } from "@/components/VideoFacade";
 import { sortedProjects } from "@/content/projects";
@@ -44,7 +45,7 @@ export default function StudioPage() {
         {/* Ticker vertical: el trabajo del estudio pasando junto al texto */}
         <TickerY className="h-[30rem] md:h-[40rem]">
           {sortedProjects.map((p) => (
-            <Link key={p.slug} href={`/proyectos/${p.slug}`} scroll={false} className="group block pb-6">
+            <ProjectLink key={p.slug} slug={p.slug} className="group block pb-6">
               <div className="relative aspect-[3/2] bg-paper-2">
                 <Image src={p.cover.src} alt={p.cover.alt} fill quality={70} sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
               </div>
@@ -52,7 +53,7 @@ export default function StudioPage() {
                 <span className="font-medium group-hover:underline group-hover:underline-offset-4">{p.title}</span>
                 <span className="text-muted">{p.year}</span>
               </p>
-            </Link>
+            </ProjectLink>
           ))}
         </TickerY>
       </section>

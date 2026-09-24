@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "motion/react";
 import { useRef } from "react";
 import { cn } from "@/lib/cn";
-import { expandTransition, useOpenProject } from "@/lib/motion";
+import { expandTransition, getOpenProject, useOpenProject } from "@/lib/motion";
 import type { Project } from "@/content/types";
+import { ProjectLink } from "./ProjectLink";
 
 /**
  * Tarjeta de la grilla bento: la imagen llena su celda (grande, alta o ancha)
@@ -37,9 +37,8 @@ export function ProjectCard({ project, priority = false, sizes }: { project: Pro
   };
 
   return (
-    <Link
-      href={`/proyectos/${project.slug}`}
-      scroll={false}
+    <ProjectLink
+      slug={project.slug}
       className="group relative block h-full"
       onPointerMove={onMove}
       onPointerLeave={onLeave}
@@ -49,8 +48,9 @@ export function ProjectCard({ project, priority = false, sizes }: { project: Pro
         ref={ref}
         layoutId={`cover-${project.slug}`}
         transition={expandTransition}
-        // al volver del modal debe pasar por encima del modal (z-70) que se desvanece
-        onLayoutAnimationStart={() => ref.current && (ref.current.style.zIndex = "80")}
+        // al cerrar el modal vuelve por ENCIMA de él (z-70) mientras se desvanece; si solo se
+        // pasó a otro proyecto ("Siguiente") vuelve por debajo, tapada por el modal
+        onLayoutAnimationStart={() => ref.current && getOpenProject() === null && (ref.current.style.zIndex = "80")}
         onLayoutAnimationComplete={() => ref.current && (ref.current.style.zIndex = "")}
         className="relative aspect-[4/3] overflow-hidden bg-paper-2 md:aspect-auto md:h-full"
         style={{ visibility: open ? "hidden" : "visible" }}
@@ -77,6 +77,6 @@ export function ProjectCard({ project, priority = false, sizes }: { project: Pro
           </div>
         </div>
       </motion.div>
-    </Link>
+    </ProjectLink>
   );
 }

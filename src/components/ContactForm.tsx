@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { ArrowUpRight, Check, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -13,7 +13,7 @@ type Errors = Partial<Record<string, string[]>>;
 
 export function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,13 +26,11 @@ export function ContactForm() {
     }
     setErrors({});
     setStatus("sending");
-    try {
-      const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data) });
-      if (!res.ok) throw new Error();
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
+    // ⚠ MOCKUP (sitio estático en GitHub Pages): no hay servidor que reciba el
+    // mensaje, así que solo se simula el envío. Para producción: un hosting con
+    // servidor (ruta de API + Resend) o un servicio de formularios externo.
+    await new Promise((r) => setTimeout(r, 900));
+    setStatus("sent");
   }
 
   if (status === "sent") {
@@ -88,13 +86,7 @@ export function ContactForm() {
           Enviar
           <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </button>
-        <AnimatePresence>
-          {status === "error" && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm text-red-700" role="alert">
-              No se pudo enviar. Intenta de nuevo o escríbenos por WhatsApp.
-            </motion.p>
-          )}
-        </AnimatePresence>
+        <p className="text-sm text-muted">Mockup: el envío es simulado.</p>
       </div>
     </form>
   );

@@ -4,6 +4,7 @@ import { sortedProjects } from "@/content/projects";
 import { serviceName } from "@/content/services";
 import type { Project } from "@/content/types";
 import { ProjectCover } from "./ProjectCover";
+import { ProjectLink } from "./ProjectLink";
 import { VideoFacade } from "./VideoFacade";
 
 /**
@@ -57,10 +58,10 @@ export function ProjectDetail({ project, inModal = false }: { project: Project; 
 
       <nav data-fade aria-label="Más proyectos" className="mt-16 flex justify-between gap-6 border-t border-line pt-6">
         {inModal ? <span /> : <Link href="/" className="text-muted hover:text-ink">← Todos los proyectos</Link>}
-        <Link href={`/proyectos/${next.slug}`} scroll={false} className="text-right hover:underline hover:underline-offset-4">
+        <ProjectLink slug={next.slug} className="text-right hover:underline hover:underline-offset-4">
           <span className="text-muted">Siguiente: </span>
           {next.title} →
-        </Link>
+        </ProjectLink>
       </nav>
     </>
   );

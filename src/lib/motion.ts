@@ -15,6 +15,8 @@ export const expandTransition = { duration: 0.5, ease: [0.39, 0.14, 0.26, 1] } a
 let openSlug: string | null = null;
 const listeners = new Set<() => void>();
 
+export const getOpenProject = () => openSlug;
+
 export function setOpenProject(slug: string | null) {
   openSlug = slug;
   listeners.forEach((l) => l());

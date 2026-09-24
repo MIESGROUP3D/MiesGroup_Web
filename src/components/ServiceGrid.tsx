@@ -10,8 +10,8 @@ import { whatsappHref } from "@/content/site";
 import type { Service } from "@/content/types";
 
 /*
- * El servicio abierto vive en el hash (#web3d): las URLs viejas de WordPress
- * redirigen a /servicios#<slug> y llegan con el modal ya abierto.
+ * El servicio abierto vive en el hash (#web3d): un enlace a /servicios/#<slug>
+ * llega con el modal ya abierto (útil para compartir un servicio).
  * replaceState en vez de location.hash: no salta el scroll ni ensucia el historial.
  */
 const HASH_EVENT = "servicios:hash";

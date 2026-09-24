@@ -51,16 +51,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # igual que .nvmrc (Next 16 necesita Node ≥ 20.9)
+          node-version: "22"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
+        id: pages
+        # Sin `static_site_generator: next`: la configuración estática (output: "export",
+        # basePath, imágenes sin optimizar) ya está en next.config.ts y el inyector
+        # automático no sabe editar archivos .ts.
         uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
       - name: Restore cache
         uses: actions/cache@v4
         with:
@@ -75,6 +74,9 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        env:
+          # subcarpeta de GitHub Pages (/MiesGroup_Web); vacía si se usa un dominio propio
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

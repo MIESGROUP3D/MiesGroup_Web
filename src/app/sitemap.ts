@@ -3,6 +3,9 @@ import { games } from "@/content/games";
 import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 
+// sitio estático (output: "export"): se genera una sola vez en el build
+export const dynamic = "force-static";
+
 /** sitemap.xml generado desde el contenido: una página nueva aparece sola. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const u = (p: string) => `${site.url}${p}`;

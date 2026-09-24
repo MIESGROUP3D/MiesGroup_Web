@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/basePath";
 import { img } from "./media";
 import type { Game, VideoRef } from "./types";
 
@@ -9,7 +10,7 @@ import type { Game, VideoRef } from "./types";
  * pantalla completa y aviso en móvil. Cuando el cliente entregue su build:
  *   1. Copia la carpeta exportada a public/games/<slug>/ (con index.html en la raíz)
  *   2. Agrega su entrada aquí
- *   3. Si es Unity/Godot con hilos, revisa los headers en next.config.ts
+ *   3. Unity/Godot con hilos o comprimidos necesitan headers de servidor (no disponibles en GitHub Pages; ver README)
  */
 export const games: Game[] = [
   {
@@ -17,7 +18,7 @@ export const games: Game[] = [
     title: "Torre — demo de integración",
     summary:
       "Apila las losas con precisión para levantar la torre más alta. Juego de ejemplo que valida cómo se cargará el juego real del cliente en esta sección.",
-    buildPath: "/games/torre-demo/index.html",
+    buildPath: withBase("/games/torre-demo/index.html"),
     cover: img("/media/games/torre-demo.jpg", "Portada del juego Torre: edificio escalonado de noche"),
     controls: ["Clic, toque o barra espaciadora: soltar losa", "R: reiniciar"],
     mobileSupported: true,

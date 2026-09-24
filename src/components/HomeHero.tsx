@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { skipNextMorph } from "@/lib/motion";
 import type { MediaImage, Project } from "@/content/types";
+import { ProjectLink } from "./ProjectLink";
 
 const ease = [0.39, 0.14, 0.26, 1] as const;
 const SLIDE_SECONDS = 6;
@@ -80,17 +79,17 @@ export function HomeHero({ projects }: { projects: Project[] }) {
               <p className="text-sm text-paper/75">
                 {current.location} · {current.year}
               </p>
-              <Link
-                href={`/proyectos/${current.slug}`}
-                scroll={false}
-                onClick={skipNextMorph}
+              <ProjectLink
+                slug={current.slug}
+                // desde el hero la portada solo aparece (la tarjeta de la grilla está lejos)
+                morph={false}
                 className="group mt-1 inline-flex items-baseline gap-3 text-4xl font-medium tracking-[-0.035em] md:text-7xl"
               >
                 {current.title}
                 <span aria-hidden className="text-xl transition-transform duration-500 group-hover:translate-x-1.5 md:text-2xl">
                   →
                 </span>
-              </Link>
+              </ProjectLink>
             </motion.div>
           </AnimatePresence>
         </div>

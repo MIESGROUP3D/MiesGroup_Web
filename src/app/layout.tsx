@@ -5,6 +5,7 @@ import "@fontsource-variable/instrument-sans";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { IntroParticles } from "@/components/IntroParticles";
+import { ProjectModal } from "@/components/ProjectModal";
 import { SideMenu } from "@/components/SideMenu";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
@@ -54,7 +55,7 @@ const jsonLd = {
 
 const introScript = `try{if(sessionStorage.getItem("mies-intro"))document.documentElement.classList.add("intro-seen")}catch(e){}`;
 
-export default function RootLayout({ children, modal }: LayoutProps<"/">) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // suppressHydrationWarning: el script de abajo agrega la clase intro-seen antes de hidratar
     <html lang="es" suppressHydrationWarning>
@@ -76,8 +77,8 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
             <Footer />
           </SideMenu>
           {/* Fuera de SideMenu: son position: fixed */}
-          {/* Slot @modal: proyecto abierto sobre la página (ruta interceptada) */}
-          {modal}
+          {/* Proyecto abierto sobre la página (lo abre cualquier ProjectLink) */}
+          <ProjectModal />
           <WhatsAppFab />
         </Providers>
       </body>

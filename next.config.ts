@@ -1,76 +1,32 @@
 import type { NextConfig } from "next";
 
 /**
- * Configuración de Next.js
+ * Configuración de Next.js — MOCKUP publicado en GitHub Pages (sitio estático).
  *
- * - images: AVIF/WebP automáticos + calidades permitidas (Next 16 solo permite
- *   [75] por defecto; declaramos las que usamos).
- * - headers: seguridad básica + headers del juego en /games.
- * - redirects: URLs del WordPress actual → nuevas rutas (301/308 permanentes)
- *   para no perder posicionamiento SEO.
+ * - output: "export" → `next build` genera HTML/CSS/JS plano en /out.
+ * - basePath: GitHub Pages publica en /MiesGroup_Web/. Llega por la variable
+ *   NEXT_PUBLIC_BASE_PATH (la define el workflow); en local queda vacía.
+ *   Las rutas de imágenes se prefijan con withBase() (src/lib/basePath.ts).
+ * - images.unoptimized: sin servidor no hay optimización de imágenes.
+ * - trailingSlash: /estudio → /estudio/index.html (lo que GitHub Pages sirve).
+ *
+ * Quedaron fuera por ser un sitio estático (volver a agregarlos al pasar a un
+ * hosting con servidor, p. ej. Vercel): redirecciones 301 de las URLs viejas
+ * de WordPress, headers de seguridad y el envío real del formulario.
  */
-const serviceSlugs = ["3d-rendering", "cgi-animation", "360-virtual-tour", "metaverse-vr", "web3d", "ai"];
-
-const legacyRedirects: Array<[string, string]> = [
-  // WordPress actual
-  ["/3d-rendering", "/servicios#3d-rendering"],
-  ["/cgi-animation", "/servicios#cgi-animation"],
-  ["/360-virtual-tour", "/servicios#360-virtual-tour"],
-  ["/metaverse-vr", "/servicios#metaverse-vr"],
-  ["/que-es-web3d", "/servicios#web3d"],
-  ["/ai", "/servicios#ai"],
-  ["/video-juegos", "/videojuegos"],
-  ["/about-us", "/estudio"],
-  ["/privacy-and-data-policy", "/privacidad"],
-  // estructura anterior del mockup → estructura mínima (ref. mir.no)
-  ["/proyectos", "/"],
-  ["/nosotros", "/estudio"],
-  ...serviceSlugs.map((s): [string, string] => [`/servicios/${s}`, `/servicios#${s}`]),
-];
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
+  output: "export",
+  basePath,
+  trailingSlash: true,
+
   // Oculta el botón "N" de Next.js en desarrollo (tapaba el hero en las demos).
   // Los errores de compilación y de ejecución se siguen mostrando.
   devIndicators: false,
 
   images: {
-    formats: ["image/avif", "image/webp"],
-    qualities: [60, 70, 75, 80, 90],
-    deviceSizes: [640, 828, 1080, 1280, 1600, 1920, 2560],
-  },
-
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-        ],
-      },
-      {
-        // Assets del juego: cache largo (usar nombres con hash o cambiar la carpeta al versionar)
-        source: "/games/:path*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=3600, must-revalidate" },
-          // ── Descomentar SOLO si el build del cliente es Unity/Godot con hilos (SharedArrayBuffer):
-          // { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          // { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
-        ],
-      },
-      {
-        source: "/games/:path*.wasm",
-        headers: [{ key: "Content-Type", value: "application/wasm" }],
-      },
-      // Builds Unity comprimidos (.br / .gz) necesitan Content-Encoding explícito:
-      // { source: "/games/:path*.br", headers: [{ key: "Content-Encoding", value: "br" }] },
-      // { source: "/games/:path*.gz", headers: [{ key: "Content-Encoding", value: "gzip" }] },
-    ];
-  },
-
-  async redirects() {
-    return legacyRedirects.map(([source, destination]) => ({ source, destination, permanent: true }));
+    unoptimized: true,
   },
 };
 

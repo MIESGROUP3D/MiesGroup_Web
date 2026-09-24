@@ -4,7 +4,7 @@ import type { Service, ServiceSlug } from "./types";
 /**
  * Servicios. ⚠ Los textos son un BORRADOR para el mockup: se reemplazan por los
  * textos definitivos del cliente. `legacyPath` = URL actual en WordPress,
- * usada para las redirecciones 301 (next.config.ts).
+ * para las redirecciones 301 cuando el sitio pase a un hosting con servidor.
  */
 export const services: Service[] = [
   {

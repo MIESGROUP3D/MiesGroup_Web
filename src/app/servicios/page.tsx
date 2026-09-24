@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 
 /**
  * Los 6 servicios en una grilla; cada uno se abre en un modal con su detalle.
- * Las URLs viejas (/3d-rendering, /servicios/web3d…) llegan como /servicios#slug
- * y abren el modal correspondiente (next.config.ts).
+ * Un enlace a /servicios/#slug abre directamente el modal de ese servicio.
  */
 export default function ServicesPage() {
   const counts = Object.fromEntries(services.map((s) => [s.slug, sortedProjects.filter((p) => p.services.includes(s.slug)).length]));
