@@ -10,8 +10,10 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
  * - Una vez por sesión (sessionStorage). Un script inline en el <head>
  *   (layout.tsx) marca `html.intro-seen` ANTES de pintar, así en visitas
  *   siguientes no hay ni un frame de pantalla blanca.
- * - Se salta con clic, tecla o scroll. Con prefers-reduced-motion no se
- *   muestra (CSS). Si el JS fallara, la capa se oculta sola (animación CSS
+ * - NO se puede saltar (pedido del cliente): sin clic/tecla/scroll para
+ *   cerrarla y con el scroll de la página bloqueado mientras dura (~3–4 s).
+ * - Con prefers-reduced-motion no se muestra (CSS): es una protección para
+ *   personas sensibles al movimiento. Si el JS fallara, la capa se oculta sola (animación CSS
  *   de respaldo en globals.css).
  * - Canvas 2D: ~1.5–2.5k partículas, un solo requestAnimationFrame.
  */
@@ -31,7 +33,6 @@ const shouldSkip = () =>
 export function IntroParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<"play" | "fade" | "done">("play");
-  const finishRef = useRef<() => void>(() => {});
   // ya vista en esta sesión o movimiento reducido: no se muestra (en el servidor sí se pinta)
   const skip = useSyncExternalStore(noopSubscribe, shouldSkip, () => false);
 
@@ -49,6 +50,9 @@ export function IntroParticles() {
       return () => clearTimeout(id);
     }
 
+    // sin scroll mientras dura la intro (la página se movería por detrás sin verse)
+    root.style.overflow = "hidden";
+
     let raf = 0;
     let finished = false;
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -56,6 +60,7 @@ export function IntroParticles() {
       if (finished) return;
       finished = true;
       cancelAnimationFrame(raf);
+      root.style.overflow = "";
       setPhase("fade");
       timers.push(setTimeout(() => setPhase("done"), FADE_MS));
     };
@@ -158,18 +163,11 @@ export function IntroParticles() {
     };
     start();
 
-    finishRef.current = finish;
-    const onSkip = () => finish();
-    window.addEventListener("keydown", onSkip);
-    window.addEventListener("wheel", onSkip, { passive: true });
-    window.addEventListener("touchmove", onSkip, { passive: true });
     return () => {
       finished = true;
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
-      window.removeEventListener("keydown", onSkip);
-      window.removeEventListener("wheel", onSkip);
-      window.removeEventListener("touchmove", onSkip);
+      root.style.overflow = "";
     };
   }, [skip]);
 
@@ -179,7 +177,6 @@ export function IntroParticles() {
       aria-hidden
       className="intro fixed inset-0 z-[100] bg-paper transition-opacity ease-out"
       style={{ opacity: phase === "fade" ? 0 : 1, transitionDuration: `${FADE_MS}ms`, pointerEvents: phase === "fade" ? "none" : "auto" }}
-      onClick={() => finishRef.current()}
     >
       <canvas ref={canvasRef} className="size-full" />
     </div>

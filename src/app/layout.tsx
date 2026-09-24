@@ -67,16 +67,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <IntroParticles />
         <Providers>
-          {/* Pestaña lateral de navegación; desplaza este contenido al abrirse */}
-          <SideMenu>
-            <Header />
-            {/* Transición suave entre páginas (View Transitions API; sin soporte, navega normal) */}
-            <ViewTransition default="page">
-              <main id="contenido">{children}</main>
-            </ViewTransition>
-            <Footer />
-          </SideMenu>
-          {/* Fuera de SideMenu: son position: fixed */}
+          <Header />
+          {/* Transición suave entre páginas (View Transitions API; sin soporte, navega normal) */}
+          <ViewTransition default="page">
+            <main id="contenido">{children}</main>
+          </ViewTransition>
+          <Footer />
+          {/* Botón "Menú" + panel lateral */}
+          <SideMenu />
           {/* Proyecto abierto sobre la página (lo abre cualquier ProjectLink) */}
           <ProjectModal />
           <WhatsAppFab />

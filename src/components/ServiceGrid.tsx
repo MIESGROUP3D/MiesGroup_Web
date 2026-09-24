@@ -39,6 +39,12 @@ const closeService = () => setHash(null);
  */
 export function ServiceGrid({ services, counts }: { services: Service[]; counts: Record<string, number> }) {
   const hash = useSyncExternalStore(subscribe, readHash, () => "");
+  // al llegar navegando (/servicios/#slug) Next actualiza la URL después de pintar:
+  // se vuelve a leer el hash un instante después
+  useEffect(() => {
+    const id = setTimeout(() => window.dispatchEvent(new Event(HASH_EVENT)));
+    return () => clearTimeout(id);
+  }, []);
   const selected = services.find((s) => s.slug === hash) ?? null;
 
   return (

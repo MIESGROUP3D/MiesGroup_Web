@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { cn } from "@/lib/cn";
 import { services } from "@/content/services";
 import type { Project, ServiceSlug } from "@/content/types";
@@ -55,6 +55,12 @@ const bento = [
 /** Portafolio: una línea de filtros en texto + grilla bento. */
 export function ProjectGrid({ projects }: { projects: Project[] }) {
   const search = useSyncExternalStore(subscribe, readSearch, () => "");
+  // al llegar navegando (/?servicio=…) Next actualiza la URL después de pintar:
+  // se vuelve a leer un instante después
+  useEffect(() => {
+    const id = setTimeout(() => window.dispatchEvent(new Event(URL_EVENT)));
+    return () => clearTimeout(id);
+  }, []);
   const usedServices = useMemo(() => services.filter((s) => projects.some((p) => p.services.includes(s.slug))), [projects]);
 
   // valores desconocidos en la URL se ignoran (→ "Todo")

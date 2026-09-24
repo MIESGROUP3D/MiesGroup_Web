@@ -66,7 +66,7 @@ export function HomeHero({ projects }: { projects: Project[] }) {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/45 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/70 to-transparent" />
 
-      <div className="shell absolute inset-x-0 bottom-0 flex flex-col gap-6 pb-8 pr-14 text-paper md:flex-row md:items-end md:justify-between md:pb-10 md:pr-16">
+      <div className="shell absolute inset-x-0 bottom-0 flex flex-col gap-6 pb-8 text-paper md:flex-row md:items-end md:justify-between md:pb-10">
         <div aria-live={running ? "off" : "polite"} className="min-h-[4.5rem]">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
