@@ -5,6 +5,8 @@ import { Play } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import type { MediaImage, VideoRef } from "@/content/types";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 
 /**
  * Patrón "facade": muestra un póster liviano y SOLO al hacer clic carga el
@@ -33,6 +35,7 @@ export function VideoFacade({
   autoLoad?: boolean;
 }) {
   const [active, setActive] = useState(autoLoad);
+  const playLabel = t(useLang()).common.play;
   const poster = video.poster ?? fallbackPoster;
   const ytThumb = video.provider === "youtube" ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg` : null;
 
@@ -51,7 +54,7 @@ export function VideoFacade({
           />
         )
       ) : (
-        <button type="button" onClick={() => setActive(true)} className="absolute inset-0 size-full text-left" aria-label={`Reproducir: ${video.title}`}>
+        <button type="button" onClick={() => setActive(true)} className="absolute inset-0 size-full text-left" aria-label={`${playLabel}: ${video.title}`}>
           {poster ? (
             <Image src={poster.src} alt="" fill sizes={sizes} quality={60} className="object-cover opacity-80 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />
           ) : ytThumb ? (

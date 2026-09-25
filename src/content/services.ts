@@ -1,4 +1,6 @@
 import { img } from "./media";
+import type { Locale } from "@/lib/i18n";
+import { servicesEn } from "./en";
 import type { Service, ServiceSlug } from "./types";
 
 /**
@@ -9,19 +11,19 @@ import type { Service, ServiceSlug } from "./types";
 export const services: Service[] = [
   {
     slug: "3d-rendering",
-    name: "3D Rendering",
+    name: "Render 3D",
     tagline: "Imágenes fotorrealistas que venden el proyecto antes de construirlo.",
     body: [
       "Renders exteriores, interiores y aéreos con iluminación, materiales y ambientación fieles al diseño. Cada imagen se compone como una fotografía de arquitectura: encuadre, hora del día y atmósfera pensados para el público del proyecto.",
       "Entregamos en la resolución que cada canal necesita, desde valla publicitaria hasta redes sociales.",
     ],
     deliverables: ["Renders exteriores e interiores", "Vistas aéreas e implantación", "Postproducción y ambientación", "Formatos para impresión gran formato y digital"],
-    cover: img("/media/projects/torre-aurora/01.jpg", "Render exterior de torre residencial al atardecer"),
+    cover: img("/media/projects/trialto/01.jpg", "Torres de Trialto al atardecer", 2000, 1125),
     legacyPath: "/3d-rendering/",
   },
   {
     slug: "cgi-animation",
-    name: "CGI Animation",
+    name: "Animación CGI",
     tagline: "Recorridos y animaciones cinematográficas del proyecto.",
     body: [
       "Animaciones arquitectónicas con lenguaje de cine: recorridos, time-lapses de luz, secuencias constructivas y piezas para lanzamiento comercial.",
@@ -33,7 +35,7 @@ export const services: Service[] = [
   },
   {
     slug: "360-virtual-tour",
-    name: "360 Virtual Tour",
+    name: "Tour virtual 360°",
     tagline: "Recorre cada espacio desde el navegador, sin instalar nada.",
     body: [
       "Tours virtuales 360° navegables en web y móvil, con puntos de interés, planos interactivos y cambio de acabados.",
@@ -44,15 +46,16 @@ export const services: Service[] = [
     legacyPath: "/360-virtual-tour/",
   },
   {
-    slug: "metaverse-vr",
-    name: "Metaverse / VR",
-    tagline: "Experiencias inmersivas en realidad virtual a escala real.",
+    slug: "vr-games",
+    name: "VR/Juegos",
+    tagline: "Realidad virtual y videojuegos: experiencias para recorrer y jugar.",
     body: [
-      "Experiencias en tiempo real (Unreal Engine) para visores como Meta Quest: el cliente camina el proyecto a escala 1:1 y toma decisiones antes de construir.",
-      "También desarrollamos espacios multiusuario y showrooms virtuales.",
+      "Experiencias en tiempo real (Unreal Engine) para visores como Meta Quest: el cliente camina el proyecto a escala 1:1 y toma decisiones antes de construir. También desarrollamos espacios multiusuario y showrooms virtuales.",
+      "Y videojuegos que corren directamente en el navegador, sin instalar nada: piezas jugables para marcas, lanzamientos y experiencias interactivas.",
     ],
-    deliverables: ["Experiencias VR en tiempo real", "Showrooms virtuales", "Configuradores de acabados", "Soporte para sala de ventas"],
+    deliverables: ["Experiencias VR en tiempo real", "Showrooms virtuales", "Configuradores de acabados", "Videojuegos para navegador"],
     cover: img("/media/projects/edificio-cumbre/03.jpg", "Torre de oficinas de noche con fachada iluminada"),
+    // en el sitio actual eran dos páginas: /metaverse-vr/ y /video-juegos/
     legacyPath: "/metaverse-vr/",
   },
   {
@@ -69,7 +72,7 @@ export const services: Service[] = [
   },
   {
     slug: "ai",
-    name: "AI",
+    name: "IA",
     tagline: "Inteligencia artificial aplicada a la visualización.",
     body: [
       "Flujos con IA para acelerar iteraciones de diseño, variantes de ambientación y contenido para campañas, siempre con control de calidad del equipo.",
@@ -85,6 +88,19 @@ export function getService(slug: string) {
   return services.find((s) => s.slug === slug);
 }
 
-export function serviceName(slug: ServiceSlug) {
-  return getService(slug)?.name ?? slug;
+export function serviceName(slug: ServiceSlug, lang: Locale = "es") {
+  return getServiceIn(slug, lang)?.name ?? slug;
+}
+
+/** Servicios en un idioma (en inglés, con los textos de en.ts; los nombres son iguales). */
+export function getServices(lang: Locale = "es"): Service[] {
+  if (lang === "es") return services;
+  return services.map((s) => {
+    const e = servicesEn[s.slug];
+    return e ? { ...s, name: e.name ?? s.name, tagline: e.tagline, body: e.body, deliverables: e.deliverables, cover: { ...s.cover, alt: e.coverAlt } } : s;
+  });
+}
+
+export function getServiceIn(slug: string, lang: Locale = "es") {
+  return getServices(lang).find((s) => s.slug === slug);
 }

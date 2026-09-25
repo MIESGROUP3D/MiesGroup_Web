@@ -44,3 +44,23 @@ export const skipNextMorph = () => {
   noMorphUntil = Date.now() + 1500;
 };
 export const shouldSkipMorph = () => Date.now() < noMorphUntil;
+
+/*
+ * Mientras una tarjeta vuelve volando desde un modal, debe pasar por ENCIMA de
+ * él (z-index alto). Se sube al empezar la animación y se baja al terminar;
+ * como Motion no siempre avisa el final (animación interrumpida o casi nula),
+ * se baja igual pasado un tiempo máximo. Así nunca queda "atascada" por encima
+ * del menú u otras capas.
+ */
+const liftTimers = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
+export function liftWhileFlying(el: HTMLElement | null, maxMs = 900) {
+  if (!el) return;
+  el.style.zIndex = "80";
+  clearTimeout(liftTimers.get(el));
+  liftTimers.set(el, setTimeout(() => dropAfterFlying(el), maxMs));
+}
+export function dropAfterFlying(el: HTMLElement | null) {
+  if (!el) return;
+  clearTimeout(liftTimers.get(el));
+  el.style.zIndex = "";
+}

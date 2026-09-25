@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+import { conferencesEn } from "./en";
 import type { Conference } from "./types";
 
 /** ⚠ Datos DE EJEMPLO: reemplazar con las conferencias reales del cliente. */
@@ -24,3 +26,7 @@ export const conferences: Conference[] = [
     summary: "Casos de uso reales de IA generativa sin perder fidelidad al proyecto.",
   },
 ];
+
+/** Conferencias en un idioma (en inglés, título y resumen de en.ts; el evento no se traduce). */
+export const getConferences = (lang: Locale = "es"): Conference[] =>
+  lang === "es" ? conferences : conferences.map((c, i) => ({ ...c, ...conferencesEn[i] }));

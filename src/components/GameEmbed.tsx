@@ -6,6 +6,8 @@ import { Gamepad2, Maximize, Minimize, Play, RotateCcw, Smartphone } from "lucid
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Game } from "@/content/types";
 import { VideoFacade } from "./VideoFacade";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 
 type State = "idle" | "loading" | "ready";
 
@@ -23,6 +25,7 @@ type State = "idle" | "loading" | "ready";
  * - Pantalla completa (Fullscreen API) y aviso en móvil si el juego no lo soporta.
  */
 export function GameEmbed({ game }: { game: Game }) {
+  const ui = t(useLang()).vrGames;
   const wrap = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLIFrameElement>(null);
   const [state, setState] = useState<State>("idle");
@@ -66,7 +69,7 @@ export function GameEmbed({ game }: { game: Game }) {
     return (
       <div className="border border-line bg-paper-2 p-6">
         <p className="flex items-center gap-3 text-sm text-ink-soft">
-          <Smartphone className="size-5 text-ink" /> Este juego está pensado para computador. Mira el gameplay mientras tanto:
+          <Smartphone className="size-5 text-ink" /> {ui.desktopOnly}
         </p>
         {game.trailer ? <VideoFacade video={game.trailer} fallbackPoster={game.cover} className="mt-5" /> : null}
       </div>
@@ -103,13 +106,13 @@ export function GameEmbed({ game }: { game: Game }) {
                     <span className="grid size-24 place-items-center rounded-full bg-ink text-paper transition-transform duration-500 group-hover:scale-110">
                       <Play className="ml-1 size-9" fill="currentColor" />
                     </span>
-                    <span className="display text-2xl">Jugar</span>
+                    <span className="display text-2xl">{ui.play}</span>
                   </button>
                 ) : (
                   <div className="w-64 text-center" role="status" aria-live="polite">
                     <Gamepad2 className="mx-auto size-8 animate-pulse text-ink" />
                     <p className="mt-4 text-xs text-ink-soft">
-                      Cargando {progress !== null ? `${Math.round(progress * 100)}%` : "…"}
+                      {ui.loading} {progress !== null ? `${Math.round(progress * 100)}%` : "…"}
                     </p>
                     <div className="mt-3 h-px w-full overflow-hidden bg-line">
                       {progress !== null ? (
@@ -139,7 +142,7 @@ export function GameEmbed({ game }: { game: Game }) {
             onClick={() => { setNonce((n) => n + 1); setState("loading"); setProgress(null); }}
             className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs hover:border-ink hover:text-ink disabled:opacity-40"
           >
-            <RotateCcw className="size-4" /> Reiniciar
+            <RotateCcw className="size-4" /> {ui.restart}
           </button>
           <button
             type="button"
@@ -147,7 +150,7 @@ export function GameEmbed({ game }: { game: Game }) {
             onClick={toggleFs}
             className="inline-flex items-center gap-2 border border-line px-4 py-2 text-xs hover:border-ink hover:text-ink disabled:opacity-40"
           >
-            {fs ? <Minimize className="size-4" /> : <Maximize className="size-4" />} {fs ? "Salir" : "Pantalla completa"}
+            {fs ? <Minimize className="size-4" /> : <Maximize className="size-4" />} {fs ? ui.exitFullscreen : ui.fullscreen}
           </button>
         </div>
       </div>

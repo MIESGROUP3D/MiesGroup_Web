@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { route } from "@/lib/i18n";
 import { setOpenProject, skipNextMorph } from "@/lib/motion";
+import { useLang } from "@/lib/useLang";
 
 /**
  * Enlace a un proyecto que lo abre en el modal (ProjectModal) sin salir de la
@@ -18,9 +20,10 @@ export function ProjectLink({
   onClick,
   ...props
 }: Omit<ComponentProps<typeof Link>, "href"> & { slug: string; morph?: boolean }) {
+  const lang = useLang();
   return (
     <Link
-      href={`/proyectos/${slug}/`}
+      href={route(lang, "projects", `/${slug}/`)}
       scroll={false}
       {...props}
       onClick={(e) => {

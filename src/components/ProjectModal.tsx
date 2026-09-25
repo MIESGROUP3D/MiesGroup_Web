@@ -4,7 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { setOpenProject, useOpenProject } from "@/lib/motion";
-import { getProject } from "@/content/projects";
+import { getProjectIn } from "@/content/projects";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 import { ProjectDetail } from "./ProjectDetail";
 
 /**
@@ -67,7 +69,8 @@ export function ProjectModal() {
     };
   }, [isOpen]);
 
-  const project = shown ? getProject(shown) : undefined;
+  const lang = useLang();
+  const project = shown ? getProjectIn(shown, lang) : undefined;
 
   return (
     <AnimatePresence onExitComplete={() => setClosing(false)}>
@@ -87,15 +90,20 @@ export function ProjectModal() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={`titulo-${project.slug}`}
-            className="modal-panel shell max-w-6xl pb-16"
+            className="modal-panel"
             data-closing={closing ? "" : undefined}
           >
-            <div data-fade className="sticky top-0 z-10 -mx-2 flex justify-end bg-paper/90 py-3">
-              <button type="button" data-close onClick={close} className="px-2 py-1 text-muted hover:text-ink">
-                Cerrar ✕
-              </button>
-            </div>
-            <ProjectDetail key={project.slug} project={project} inModal />
+            {/* Cerrar: píldora oscura fija arriba a la derecha, visible sobre la portada */}
+            <button
+              type="button"
+              data-close
+              data-fade
+              onClick={close}
+              className="fixed right-[clamp(1rem,3vw,2.5rem)] top-3 z-10 flex h-10 items-center gap-2 bg-ink px-4 text-sm text-paper ring-1 ring-paper/25 transition-colors hover:bg-ink-soft"
+            >
+              {t(lang).common.close} <span aria-hidden>✕</span>
+            </button>
+            <ProjectDetail key={project.slug} project={project} lang={lang} inModal />
           </div>
         </motion.div>
       )}

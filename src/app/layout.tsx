@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from "next";
 // Fuentes auto-alojadas (sin Google Fonts externo), font-display: swap
 import "@fontsource-variable/instrument-sans";
+import "@fontsource-variable/eb-garamond";
+import "@fontsource-variable/eb-garamond/wght-italic.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { HtmlLang } from "@/components/HtmlLang";
 import { IntroParticles } from "@/components/IntroParticles";
 import { ProjectModal } from "@/components/ProjectModal";
+import { PageCurtain } from "@/components/PageCurtain";
 import { SideMenu } from "@/components/SideMenu";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
@@ -64,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-dvh">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <HtmlLang />
         <IntroParticles />
         <Providers>
           <Header />
@@ -73,6 +78,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Footer />
           {/* Botón "Menú" + panel lateral */}
           <SideMenu />
+          {/* Cortina negra de transición (la usan el menú y los paneles del inicio) */}
+          <PageCurtain />
           {/* Proyecto abierto sobre la página (lo abre cualquier ProjectLink) */}
           <ProjectModal />
           <WhatsAppFab />

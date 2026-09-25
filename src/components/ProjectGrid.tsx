@@ -2,7 +2,9 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useSyncExternalStore } from "react";
-import { services } from "@/content/services";
+import { getServices } from "@/content/services";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 import type { Project, ServiceSlug } from "@/content/types";
 import { CategoryBar } from "./CategoryBar";
 import { ProjectCard } from "./ProjectCard";
@@ -26,10 +28,9 @@ const subscribe = (cb: () => void) => {
 };
 const readSearch = () => window.location.search;
 
-function writeService(value: ServiceSlug | "all") {
+function writeService(value: ServiceSlug) {
   const params = new URLSearchParams(window.location.search);
-  if (value === "all") params.delete("servicio");
-  else params.set("servicio", value);
+  params.set("servicio", value);
   const qs = params.toString();
   window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
   window.dispatchEvent(new Event(URL_EVENT));
@@ -41,6 +42,8 @@ function writeService(value: ServiceSlug | "all") {
  * El filtro vive en la URL (?servicio=…).
  */
 export function ProjectGrid({ projects }: { projects: Project[] }) {
+  const lang = useLang();
+  const ui = t(lang);
   const search = useSyncExternalStore(subscribe, readSearch, () => "");
   // al llegar navegando (/?servicio=…) Next actualiza la URL después de pintar:
   // se vuelve a leer un instante después
@@ -48,22 +51,22 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
     const id = setTimeout(() => window.dispatchEvent(new Event(URL_EVENT)));
     return () => clearTimeout(id);
   }, []);
-  const usedServices = useMemo(() => services.filter((s) => projects.some((p) => p.services.includes(s.slug))), [projects]);
+  const usedServices = useMemo(() => getServices(lang).filter((s) => projects.some((p) => p.services.includes(s.slug))), [projects, lang]);
 
-  // valores desconocidos en la URL se ignoran (→ "Todos")
+  // sin categoría en la URL (o desconocida) → la primera (3D Rendering); no hay "Todos"
   const raw = new URLSearchParams(search).get("servicio");
-  const service: ServiceSlug | "all" = usedServices.find((s) => s.slug === raw)?.slug ?? "all";
-  const filtered = service === "all" ? projects : projects.filter((p) => p.services.includes(service));
+  const service: ServiceSlug = usedServices.find((s) => s.slug === raw)?.slug ?? usedServices[0].slug;
+  const filtered = projects.filter((p) => p.services.includes(service));
   // "Nuevo" = año más reciente del portafolio (no el reloj del navegador: el HTML es estático)
   const latestYear = Math.max(...projects.map((p) => p.year));
 
-  const options: { value: ServiceSlug | "all"; label: string }[] = [{ value: "all", label: "Todos" }, ...usedServices.map((s) => ({ value: s.slug, label: s.name }))];
+  const options: { value: ServiceSlug; label: string }[] = usedServices.map((s) => ({ value: s.slug, label: s.name }));
 
   return (
     <div>
-      <CategoryBar options={options} value={service} onChange={writeService} />
+      <CategoryBar options={options} value={service} onChange={writeService} label={ui.projects.categories} />
       <p className="sr-only" aria-live="polite">
-        {filtered.length} {filtered.length === 1 ? "proyecto" : "proyectos"}
+        {ui.common.projectCount(filtered.length)}
       </p>
 
       {/* "3D Rendering" se muestra como galería de renders en filas de 3 y 4; el resto, como tarjetas */}

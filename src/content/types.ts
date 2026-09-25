@@ -13,7 +13,7 @@ export type ServiceSlug =
   | "3d-rendering"
   | "cgi-animation"
   | "360-virtual-tour"
-  | "metaverse-vr"
+  | "vr-games"
   | "web3d"
   | "ai";
 

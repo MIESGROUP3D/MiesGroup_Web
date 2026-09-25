@@ -18,6 +18,7 @@
   --color-line-strong: rgb(10 10 10 / 0.22);
 
   --font-sans: "Instrument Sans Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "EB Garamond Variable", Garamond, Georgia, serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -109,12 +110,6 @@
 }
 @keyframes modal-fade {
   from { opacity: 0; transform: translateY(12px); }
-}
-
-/* Barra de progreso del hero (HomeHero): su final avanza la diapositiva */
-@keyframes hero-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
 }
 
 /*

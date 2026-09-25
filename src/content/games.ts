@@ -1,5 +1,7 @@
 import { withBase } from "@/lib/basePath";
 import { img } from "./media";
+import type { Locale } from "@/lib/i18n";
+import { gameVideoTitlesEn, gamesEn } from "./en";
 import type { Game, VideoRef } from "./types";
 
 /**
@@ -38,3 +40,17 @@ export const gameVideos: VideoRef[] = [
 export function getGame(slug: string) {
   return games.find((g) => g.slug === slug);
 }
+
+/** Juegos en un idioma (en inglés, con los textos de en.ts). */
+export function getGames(lang: Locale = "es"): Game[] {
+  if (lang === "es") return games;
+  return games.map((g) => {
+    const e = gamesEn[g.slug];
+    return e ? { ...g, title: e.title, summary: e.summary, controls: e.controls, cover: { ...g.cover, alt: e.coverAlt } } : g;
+  });
+}
+
+export const getGameIn = (slug: string, lang: Locale = "es") => getGames(lang).find((g) => g.slug === slug);
+
+export const getGameVideos = (lang: Locale = "es"): VideoRef[] =>
+  lang === "es" ? gameVideos : gameVideos.map((v, i) => ({ ...v, title: gameVideoTitlesEn[i] ?? v.title }));

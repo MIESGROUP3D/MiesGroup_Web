@@ -1,15 +1,20 @@
 import { z } from "zod";
+import { t } from "@/content/ui";
+import type { Locale } from "./i18n";
 
-/** Esquema compartido cliente/servidor: la misma validación en ambos lados. */
-export const contactSchema = z.object({
-  name: z.string("Escribe tu nombre").trim().min(2, "Escribe tu nombre"),
-  email: z.email("Correo no válido"),
-  phone: z.string("Escribe un teléfono").trim().min(7, "Teléfono no válido").max(20),
-  projectType: z.string("Elige un tipo de proyecto").min(1, "Elige un tipo de proyecto"),
-  message: z.string().trim().max(2000).optional().default(""),
-  privacy: z.literal(true, "Debes aceptar la política de datos"),
-  /** honeypot: debe llegar vacío (los bots lo llenan) */
-  company: z.string().max(0).optional().default(""),
-});
+/** Esquema del formulario de contacto, con los mensajes de error en el idioma de la página. */
+export function contactSchema(lang: Locale = "es") {
+  const e = t(lang).form.errors;
+  return z.object({
+    name: z.string(e.name).trim().min(2, e.name),
+    email: z.email(e.email),
+    phone: z.string(e.phone).trim().min(7, e.phoneInvalid).max(20),
+    projectType: z.string(e.projectType).min(1, e.projectType),
+    message: z.string().trim().max(2000).optional().default(""),
+    privacy: z.literal(true, e.privacy),
+    /** honeypot: debe llegar vacío (los bots lo llenan) */
+    company: z.string().max(0).optional().default(""),
+  });
+}
 
-export type ContactInput = z.infer<typeof contactSchema>;
+export type ContactInput = z.infer<ReturnType<typeof contactSchema>>;

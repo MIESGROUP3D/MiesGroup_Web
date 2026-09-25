@@ -5,6 +5,8 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import type { MediaImage, Project } from "@/content/types";
 import { ProjectLink } from "./ProjectLink";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 
 /*
  * Filas alternadas (ref. mir.no): una de 3 imágenes verticales y otra de 4
@@ -42,6 +44,7 @@ function toRows(items: Item[]) {
  * Clic → abre el proyecto en el modal.
  */
 export function RenderGallery({ projects }: { projects: Project[] }) {
+  const viewProject = t(useLang()).projects.viewProject;
   const items: Item[] = projects.flatMap((p) => p.images.map((image) => ({ project: p, image })));
 
   return (
@@ -59,7 +62,7 @@ export function RenderGallery({ projects }: { projects: Project[] }) {
               <ProjectLink
                 slug={project.slug}
                 morph={false}
-                aria-label={`${image.alt} — ver proyecto ${project.title}`}
+                aria-label={`${image.alt} — ${viewProject} ${project.title}`}
                 className={cn("group relative block overflow-hidden bg-ink-soft", row.layout.aspect)}
               >
                 <Image

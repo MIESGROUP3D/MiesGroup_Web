@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import { useRef } from "react";
-import { expandTransition, getOpenProject, useOpenProject } from "@/lib/motion";
+import { dropAfterFlying, expandTransition, getOpenProject, liftWhileFlying, useOpenProject } from "@/lib/motion";
+import { useLang } from "@/lib/useLang";
+import { t } from "@/content/ui";
 import type { Project } from "@/content/types";
 import { ProjectLink } from "./ProjectLink";
 
@@ -20,7 +22,8 @@ import { ProjectLink } from "./ProjectLink";
 export function ProjectCard({ project, latestYear, priority = false }: { project: Project; latestYear: number; priority?: boolean }) {
   const open = useOpenProject() === project.slug;
   const ref = useRef<HTMLDivElement>(null);
-  const badge = project.year >= latestYear ? "Nuevo" : project.featured ? "Destacado" : null;
+  const ui = t(useLang()).projects;
+  const badge = project.year >= latestYear ? ui.badgeNew : project.featured ? ui.badgeFeatured : null;
 
   return (
     <ProjectLink
@@ -34,8 +37,8 @@ export function ProjectCard({ project, latestYear, priority = false }: { project
         transition={expandTransition}
         // al cerrar el modal vuelve por ENCIMA de él (z-70) mientras se desvanece; si solo se
         // pasó a otro proyecto ("Siguiente") vuelve por debajo, tapada por el modal
-        onLayoutAnimationStart={() => ref.current && getOpenProject() === null && (ref.current.style.zIndex = "80")}
-        onLayoutAnimationComplete={() => ref.current && (ref.current.style.zIndex = "")}
+        onLayoutAnimationStart={() => getOpenProject() === null && liftWhileFlying(ref.current)}
+        onLayoutAnimationComplete={() => dropAfterFlying(ref.current)}
         className="relative aspect-[4/3] overflow-hidden rounded-t-xl bg-ink-soft"
         style={{ visibility: open ? "hidden" : "visible" }}
       >

@@ -1,4 +1,6 @@
 import { img } from "./media";
+import type { Locale } from "@/lib/i18n";
+import { siteEn } from "./en";
 import type { VideoRef } from "./types";
 
 /**
@@ -39,7 +41,7 @@ export const site = {
 
   hero: {
     /** Primer frame visible: SIEMPRE una imagen (nunca negro mientras carga el video) */
-    poster: img("/media/hero/hero.jpg", "Render nocturno de torre residencial reflejada en un espejo de agua"),
+    poster: img("/media/projects/sinara/01.jpg", "Torres de Sinara entre la vegetación", 2400, 1680),
     /**
      * Video de fondo opcional: MP4 corto (≤ 8 MB, 1080p, sin audio).
      * Déjalo en null para usar solo la imagen. Ej: { provider: "file", src: "/media/hero/reel.mp4", title: "Reel" }
@@ -70,4 +72,18 @@ export const site = {
 
 export function whatsappHref(message: string = site.whatsapp.message) {
   return `https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(message)}`;
+}
+
+/** Textos globales del sitio en un idioma. */
+export function siteText(lang: Locale = "es") {
+  if (lang === "es") {
+    return { description: site.description, whatsappMessage: site.whatsapp.message, story: site.about.story, heroPoster: site.hero.poster, locations: site.locations };
+  }
+  return {
+    description: siteEn.description,
+    whatsappMessage: siteEn.whatsappMessage,
+    story: siteEn.story,
+    heroPoster: { ...site.hero.poster, alt: siteEn.heroPosterAlt },
+    locations: site.locations.map((l) => ({ ...l, country: siteEn.countries[l.country] ?? l.country })),
+  };
 }

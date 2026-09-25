@@ -1,13 +1,12 @@
-/**
- * Menú principal: 4 entradas (referencia mir.no). Todo lo demás
- * (videojuegos, channel, conferencias) se alcanza desde Estudio o el footer.
- * Regla: cualquier proyecto a 2 clics desde cualquier página.
- */
-export type NavLink = { label: string; href: string };
+import type { RouteKey } from "@/lib/i18n";
 
-export const mainNav: NavLink[] = [
-  { label: "Inicio", href: "/" }, // la home: hero + portafolio completo
-  { label: "Servicios", href: "/servicios" },
-  { label: "Estudio", href: "/estudio" },
-  { label: "Contacto", href: "/contacto" },
-];
+/**
+ * Menú principal (botón "Menú" → panel lateral; no aparece en el inicio, que
+ * es un acordeón con una entrada por servicio + Estudio y Contacto).
+ * Estudio reúne "About us", Channel y Conferencias del sitio actual, y
+ * VR/Games reúne "Metaverse / VR" y "Video Juegos" (se llega desde su panel
+ * del inicio, no está en el menú). La página de Servicios se eliminó.
+ * Solo las secciones: el texto sale de ui.nav y la dirección de route(),
+ * según el idioma (src/lib/i18n.ts).
+ */
+export const mainNav = ["home", "projects", "studio", "contact"] as const satisfies readonly RouteKey[];

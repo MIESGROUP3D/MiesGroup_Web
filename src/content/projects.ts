@@ -1,4 +1,7 @@
 import { img, projectImages } from "./media";
+import type { Locale } from "@/lib/i18n";
+import { categoryLabelsEn, projectsEn } from "./en";
+import { realProjects } from "./projects-real";
 import type { Project, ProjectCategory } from "./types";
 
 /**
@@ -8,17 +11,22 @@ import type { Project, ProjectCategory } from "./types";
  *   2. Duplica un bloque de este arreglo y cambia los datos
  *   3. `npm run build` valida que no falte nada
  */
-export const projects: Project[] = [
+/**
+ * Proyectos DE EJEMPLO (placeholder) que quedan solo para las categorías sin
+ * material real todavía (Animación CGI, Tour 360°, VR/Juegos, Web3D, IA).
+ * Se reemplazan a medida que el cliente entregue esos proyectos.
+ */
+const sampleProjects: Project[] = [
   {
     slug: "torre-aurora",
     title: "Torre Aurora",
     location: "Manizales, CO",
     year: 2026,
     category: "residencial",
-    services: ["3d-rendering", "cgi-animation"],
+    services: ["cgi-animation"],
     summary: "Torre residencial de 18 pisos. Campaña de lanzamiento con renders de atardecer, nocturnos y una animación de 60 s.",
     featured: true,
-    order: 1,
+    order: 11,
     cover: img("/media/projects/torre-aurora/01.jpg", "Torre Aurora al atardecer reflejada en espejo de agua"),
     images: projectImages("torre-aurora", [
       "Torre Aurora al atardecer reflejada en espejo de agua",
@@ -35,10 +43,10 @@ export const projects: Project[] = [
     location: "Córdoba, AR",
     year: 2025,
     category: "hotelero",
-    services: ["3d-rendering", "360-virtual-tour"],
+    services: ["360-virtual-tour"],
     summary: "Pabellón de eventos frente al lago. Renders exteriores y tour 360° para comercialización.",
     featured: true,
-    order: 2,
+    order: 12,
     cover: img("/media/projects/pabellon-lago/02.jpg", "Pabellón del Lago a la hora dorada"),
     images: projectImages("pabellon-lago", [
       "Pabellón del Lago en un día despejado",
@@ -54,10 +62,10 @@ export const projects: Project[] = [
     location: "Pereira, CO",
     year: 2025,
     category: "residencial",
-    services: ["3d-rendering", "cgi-animation", "web3d"],
+    services: ["cgi-animation", "web3d"],
     summary: "Conjunto escalonado de vivienda. Masterplan Web3D con disponibilidad por unidad.",
     featured: true,
-    order: 3,
+    order: 13,
     cover: img("/media/projects/terrazas-del-valle/01.jpg", "Terrazas del Valle a la hora dorada"),
     images: projectImages("terrazas-del-valle", [
       "Terrazas del Valle a la hora dorada",
@@ -73,10 +81,10 @@ export const projects: Project[] = [
     location: "Bogotá, CO",
     year: 2024,
     category: "corporativo",
-    services: ["metaverse-vr", "3d-rendering"],
+    services: ["vr-games"],
     summary: "Torre de oficinas. Experiencia VR a escala real para preventa de pisos corporativos.",
     featured: true,
-    order: 4,
+    order: 14,
     cover: img("/media/projects/edificio-cumbre/03.jpg", "Edificio Cumbre de noche"),
     images: projectImages("edificio-cumbre", [
       "Edificio Cumbre de día",
@@ -91,9 +99,9 @@ export const projects: Project[] = [
     location: "Los Ángeles, US",
     year: 2024,
     category: "residencial",
-    services: ["3d-rendering", "ai"],
+    services: ["ai"],
     summary: "Vivienda unifamiliar de vidrio. Exploración de ambientaciones con flujo asistido por IA.",
-    order: 5,
+    order: 15,
     cover: img("/media/projects/casa-mirador/01.jpg", "Casa Mirador iluminada de noche"),
     images: projectImages("casa-mirador", [
       "Casa Mirador iluminada de noche",
@@ -110,7 +118,7 @@ export const projects: Project[] = [
     category: "comercial",
     services: ["web3d", "cgi-animation"],
     summary: "Complejo de oficinas y comercio. Animación de lanzamiento y visor 3D para fuerza de ventas.",
-    order: 6,
+    order: 16,
     cover: img("/media/projects/centro-empresarial-norte/02.jpg", "Centro Empresarial Norte al atardecer"),
     images: projectImages("centro-empresarial-norte", [
       "Centro Empresarial Norte con niebla",
@@ -121,6 +129,9 @@ export const projects: Project[] = [
     videos: [{ provider: "vimeo", id: "1055328748", title: "Centro Empresarial Norte — lanzamiento" }],
   },
 ];
+
+/** Todos los proyectos: los reales (src/content/projects-real.ts) primero, luego los de ejemplo. */
+export const projects: Project[] = [...realProjects, ...sampleProjects];
 
 export const categoryLabels: Record<ProjectCategory, string> = {
   residencial: "Residencial",
@@ -140,3 +151,26 @@ export const featuredProjects = sortedProjects.filter((p) => p.featured);
 export function getProject(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
 }
+
+/** Un proyecto en un idioma (en inglés, con los textos de en.ts). */
+export function localizeProject(p: Project, lang: Locale = "es"): Project {
+  const e = lang === "en" ? projectsEn[p.slug] : undefined;
+  if (!e) return p;
+  return {
+    ...p,
+    summary: e.summary,
+    cover: { ...p.cover, alt: e.coverAlt },
+    images: p.images.map((im, i) => ({ ...im, alt: e.alts[i] ?? im.alt })),
+    specs: e.specs ?? p.specs,
+    videos: p.videos?.map((v, i) => ({ ...v, title: e.videoTitles?.[i] ?? v.title })),
+  };
+}
+
+export const getSortedProjects = (lang: Locale = "es") => sortedProjects.map((p) => localizeProject(p, lang));
+
+export function getProjectIn(slug: string, lang: Locale = "es") {
+  const p = getProject(slug);
+  return p && localizeProject(p, lang);
+}
+
+export const categoryLabelsFor = (lang: Locale = "es"): Record<ProjectCategory, string> => (lang === "en" ? categoryLabelsEn : categoryLabels);

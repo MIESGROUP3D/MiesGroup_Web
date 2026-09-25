@@ -37,11 +37,12 @@ npm run build        # genera el sitio estático en out/; si falta un dato oblig
 ```
 src/
 ├── app/                      # Rutas (una carpeta = una URL)
-│   ├── page.tsx              # Home = portafolio filtrable (ref. mir.no)
-│   ├── servicios/            # Los 6 servicios en una página (anclas #slug)
+│   ├── page.tsx              # Inicio: acordeón a pantalla completa (sin scroll)
+│   ├── proyectos/            # Portafolio filtrable (?servicio=…)
 │   ├── proyectos/[slug]/     # Proyecto a página completa (desde el sitio se abre en modal)
-│   ├── videojuegos/          # Listado + página del juego [slug]
-│   ├── estudio/  contacto/  channel/  conferencias/  privacidad/
+│   ├── vr-games/             # VR/Games: realidad virtual + juegos (y página del juego [slug])
+│   ├── estudio/              # Quiénes somos + Channel + Conferencias (una página)
+│   ├── contacto/  privacidad/
 │   ├── sitemap.ts  robots.ts
 │   └── layout.tsx            # Header, footer, fuentes, SEO global, JSON-LD
 ├── components/               # UI reutilizable (Header, ProjectGrid, GameEmbed, …)
@@ -78,6 +79,18 @@ Todo se edita en `src/content/`. Los componentes no tienen texto fijo.
 
 **Branding**: reemplaza los tokens `--color-*` y `--font-*` en `src/app/globals.css`, y el logo provisional en `src/components/Logo.tsx`.
 
+## Idiomas (español / inglés)
+
+El español vive en las URLs de siempre (`/proyectos/`, `/estudio/`…) y el inglés bajo `/en/` (`/en/projects/`, `/en/studio/`…). El selector **ES / EN** (arriba a la derecha) lleva a la misma página en el otro idioma, conservando el filtro y la sección.
+
+- **Rutas equivalentes**: `src/lib/i18n.ts` (`ROUTES`). Para una página nueva: agregar su ruta ahí y crear su archivo en `src/app/...` y `src/app/en/...` usando la misma vista de `src/views/` con `lang="es"` / `lang="en"`.
+- **Textos de la interfaz** (menú, botones, formulario…): `src/content/ui.ts`.
+- **Textos del contenido en inglés** (servicios, proyectos, juegos, conferencias, estudio): `src/content/en.ts`. Solo textos; imágenes, años y slugs salen del contenido en español. Si falta una traducción, se muestra el texto en español.
+- **Privacidad**: `src/content/privacy.ts`, con los dos idiomas.
+- Buscadores: cada página declara su equivalente en el otro idioma (`hreflang`) y el sitemap incluye ambos.
+
+⚠ La traducción al inglés es un **borrador**: debe revisarla el cliente.
+
 ## Juego web
 
 El juego de ejemplo (`public/games/torre-demo/`) es HTML5 Canvas y valida la integración completa: carga diferida, pantalla completa, reinicio y controles.
@@ -113,12 +126,13 @@ Al ser estático, el mockup **no tiene**: redirecciones 301 de las URLs viejas d
 
 - [ ] Quitar `robots: { index: false }` en `src/app/layout.tsx` y actualizar `src/app/robots.ts` (hoy bloquean la indexación a propósito).
 - [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, textos de "Estudio".
+- [ ] Proyectos reales (`src/content/projects-real.ts`, renders copiados de la NAS): confirmar el permiso de cada constructora para publicarlos, la ciudad de cada proyecto (hoy "Colombia") y los textos. Los 6 proyectos de ejemplo quedan solo para las categorías sin material real.
 - [ ] Política de privacidad (`src/content/privacy.ts`): revisión legal, plazo de conservación de datos y lista de terceros al día (agregar el proveedor de correo y el hosting definitivo al salir del mockup).
 - [ ] Logo SVG oficial, paleta y tipografías del cliente.
 - [ ] Confirmar el número oficial de WhatsApp y el correo que recibe el formulario.
 - [ ] Configurar Resend y Cloudflare Turnstile (anti-spam).
 - [ ] Integrar el build real del juego.
-- [ ] Decidir idioma: ES, EN o bilingüe.
+- [ ] Revisar la traducción al inglés (`src/content/en.ts`, `src/content/ui.ts`, `src/content/privacy.ts`).
 
 ## Regenerar las imágenes placeholder
 

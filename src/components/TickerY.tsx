@@ -3,6 +3,8 @@
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import { t } from "@/content/ui";
+import { useLang } from "@/lib/useLang";
 
 /**
  * Ticker vertical infinito (referencia: motion.dev ticker-y-axis, replicado con
@@ -16,6 +18,7 @@ import { cn } from "@/lib/cn";
  */
 export function TickerY({ children, speed = 28, className }: { children: React.ReactNode; speed?: number; className?: string }) {
   const reduce = useReducedMotion();
+  const ui = t(useLang()).common;
   const copyRef = useRef<HTMLDivElement>(null);
   const loop = useRef(0);
   const y = useMotionValue(0);
@@ -55,7 +58,7 @@ export function TickerY({ children, speed = 28, className }: { children: React.R
       </div>
       {!reduce && (
         <button type="button" onClick={() => setPaused((p) => !p)} aria-pressed={paused} className="mt-3 self-end text-sm text-muted hover:text-ink">
-          {paused ? "Reanudar" : "Pausar"}
+          {paused ? ui.resume : ui.pause}
         </button>
       )}
     </div>
