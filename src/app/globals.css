@@ -27,6 +27,9 @@
     background: var(--color-paper);
     color-scheme: light;
     scroll-behavior: smooth;
+    /* reserva el espacio de la barra de scroll: al bloquear el scroll (menú, modales,
+       intro) la página no salta de lado */
+    scrollbar-gutter: stable;
   }
   body {
     /* clip (no hidden): evita scroll horizontal sin romper position: sticky */
@@ -93,31 +96,6 @@
 }
 
 /*
- * VIEW TRANSITIONS (React <ViewTransition> + API del navegador)
- * - .page: la página saliente se desvanece; la entrante aparece.
- * (La expansión de proyectos y servicios la hace Motion con layoutId.)
- */
-::view-transition-old(.page) {
-  animation: 160ms ease-out both vt-fade-out;
-}
-::view-transition-new(.page) {
-  animation: 360ms ease-out 100ms both vt-fade-in;
-}
-@keyframes vt-fade-out {
-  to { opacity: 0; }
-}
-@keyframes vt-fade-in {
-  from { opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
-/*
  * MODAL DE PROYECTO (ProjectModal): lo marcado con data-fade aparece cuando la
  * portada ya "aterrizó" y desaparece primero al cerrar.
  */
@@ -152,4 +130,92 @@ html.intro-seen .intro { display: none; }
 .intro { animation: intro-failsafe 0.6s ease-out 4.5s forwards; }
 @keyframes intro-failsafe {
   to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+/*
+ * BARRA DE SCROLL DE MARCA
+ * Fina, negra sobre blanco, cuadrada (como el resto del sitio) y sin flechas;
+ * se ensancha un poco al pasar el mouse. `.scroll-dark`: versión blanca para
+ * contenedores negros (panel del menú).
+ * - Chrome, Edge, Safari: pseudo-elementos ::-webkit-scrollbar. El borde
+ *   transparente + background-clip deja el pulgar en 4 px dentro de un área de
+ *   10 px (fácil de agarrar) y al pasar el mouse crece a 8 px.
+ * - Firefox: propiedades estándar (solo admite "thin" y colores).
+ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-ink);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-width: 1px;
+}
+.scroll-dark::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 0.45);
+}
+.scroll-dark::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(255 255 255 / 0.8);
+}
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink) transparent;
+  }
+  .scroll-dark {
+    scrollbar-color: rgb(255 255 255 / 0.45) transparent;
+  }
+}
+
+/*
+ * DIFUMINADO BLANCO ↔ NEGRO (sección de proyectos de la home)
+ * Degradado con curva de suavizado (ease-in-out) en vez de lineal: el lineal
+ * concentra el cambio en el medio y se percibe como un corte. Aquí el negro
+ * entra casi imperceptible, acelera en la zona media y se asienta suave.
+ * .fade-to-ink: de blanco (arriba) a negro (abajo); .fade-to-paper: al revés.
+ */
+.fade-to-ink,
+.fade-to-paper {
+  --fade: rgb(10 10 10 / 0) 0%, rgb(10 10 10 / 0.013) 8.1%, rgb(10 10 10 / 0.049) 15.5%, rgb(10 10 10 / 0.104) 22.5%,
+    rgb(10 10 10 / 0.175) 29%, rgb(10 10 10 / 0.259) 35.2%, rgb(10 10 10 / 0.352) 41.1%, rgb(10 10 10 / 0.45) 47.1%,
+    rgb(10 10 10 / 0.55) 52.9%, rgb(10 10 10 / 0.648) 58.9%, rgb(10 10 10 / 0.741) 64.8%, rgb(10 10 10 / 0.825) 71%,
+    rgb(10 10 10 / 0.896) 77.5%, rgb(10 10 10 / 0.951) 84.5%, rgb(10 10 10 / 0.987) 91.9%, rgb(10 10 10 / 1) 100%;
+  background-color: var(--color-paper);
+}
+.fade-to-ink {
+  background-image: linear-gradient(to bottom, var(--fade));
+}
+.fade-to-paper {
+  background-image: linear-gradient(to top, var(--fade));
+}
+
+/*
+ * BARRA DE CATEGORÍAS "QUE RESPIRA" (CategoryBar): un brillo tenue recorre
+ * lentamente la superficie de vidrio de lado a lado. Con movimiento reducido,
+ * la regla global de arriba lo deja quieto.
+ */
+.breathing-glow {
+  position: absolute;
+  inset-block: -40%;
+  left: 0;
+  width: 45%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.16), transparent);
+  filter: blur(8px);
+  animation: breathing-glow 9s ease-in-out infinite alternate;
+}
+@keyframes breathing-glow {
+  from { transform: translateX(-60%); opacity: 0.6; }
+  50% { opacity: 1; }
+  to { transform: translateX(200%); opacity: 0.6; }
 }

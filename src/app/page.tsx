@@ -39,10 +39,22 @@ export default function HomePage() {
 
       <ScrollRows rows={[all.slice(0, half), all.slice(half)]} />
 
-      <section className="shell mt-20 md:mt-28" aria-labelledby="h-proyectos">
-        <h2 id="h-proyectos" className="border-t border-line pb-4 pt-6 text-muted">Proyectos</h2>
-        <ProjectGrid projects={sortedProjects} />
+      {/* Proyectos sobre fondo negro: entra y sale con un difuminado desde/hacia el blanco */}
+      <div aria-hidden className="fade-to-ink mt-10 h-80 md:h-[32rem]" />
+      <section className="bg-ink pb-20 text-paper md:pb-28" aria-labelledby="h-proyectos">
+        <div className="shell">
+          <div className="flex flex-col gap-3 border-t border-paper/15 pb-8 pt-8 md:flex-row md:items-end md:justify-between md:pt-10">
+            <h2 id="h-proyectos" className="display text-4xl md:text-6xl">
+              Proyectos
+            </h2>
+            <p className="max-w-sm text-paper/75 md:text-right">
+              {sortedProjects.length} proyectos de visualización arquitectónica. Elige una categoría y abre cualquiera.
+            </p>
+          </div>
+          <ProjectGrid projects={sortedProjects} />
+        </div>
       </section>
+      <div aria-hidden className="fade-to-paper h-64 md:h-96" />
     </>
   );
 }

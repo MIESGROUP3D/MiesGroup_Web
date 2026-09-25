@@ -69,9 +69,17 @@ export function ContactForm() {
       </div>
 
       <div className="sm:col-span-2">
+        {/* aviso de recolección: qué pedimos, para qué y cómo borrarlo (ver /privacidad) */}
+        <p id="aviso-datos" className="mb-4 text-sm text-muted">
+          Usamos estos datos solo para responder tu solicitud y darle seguimiento. No los vendemos ni los usamos con inteligencia artificial, y puedes pedir que los
+          borremos cuando quieras.
+        </p>
         <label className="flex items-start gap-3 text-sm text-ink-soft">
-          <input type="checkbox" name="privacy" className="mt-0.5 size-4 accent-[var(--color-ink)]" aria-invalid={!!errors.privacy} />
-          <span>Acepto la <Link href="/privacidad" className="text-ink underline underline-offset-4">política de privacidad y tratamiento de datos</Link>.</span>
+          {/* sin marcar por defecto: la autorización debe ser explícita (Ley 1581) */}
+          <input type="checkbox" name="privacy" aria-describedby="aviso-datos" className="mt-0.5 size-4 accent-[var(--color-ink)]" aria-invalid={!!errors.privacy} />
+          <span>
+            Autorizo el tratamiento de mis datos según la <Link href="/privacidad" className="text-ink underline underline-offset-4">política de privacidad</Link>.
+          </span>
         </label>
         <FieldError errors={errors.privacy} />
       </div>

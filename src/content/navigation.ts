@@ -6,7 +6,7 @@
 export type NavLink = { label: string; href: string };
 
 export const mainNav: NavLink[] = [
-  { label: "Proyectos", href: "/" },
+  { label: "Inicio", href: "/" }, // la home: hero + portafolio completo
   { label: "Servicios", href: "/servicios" },
   { label: "Estudio", href: "/estudio" },
   { label: "Contacto", href: "/contacto" },

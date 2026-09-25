@@ -112,7 +112,9 @@ Al ser estático, el mockup **no tiene**: redirecciones 301 de las URLs viejas d
 - [ ] Pasar a un hosting con servidor y recuperar redirecciones 301, headers, optimización de imágenes y el envío del formulario (ver "Publicación").
 
 - [ ] Quitar `robots: { index: false }` en `src/app/layout.tsx` y actualizar `src/app/robots.ts` (hoy bloquean la indexación a propósito).
-- [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, textos de "Estudio", política de privacidad.
+- [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, textos de "Estudio".
+- [ ] Con los renders reales: en `src/components/RenderMasonry.tsx` poner `USE_REAL_RATIO = true` (el mosaico de "3D Rendering" usa hoy proporciones simuladas).
+- [ ] Política de privacidad (`src/content/privacy.ts`): revisión legal, plazo de conservación de datos y lista de terceros al día (agregar el proveedor de correo y el hosting definitivo al salir del mockup).
 - [ ] Logo SVG oficial, paleta y tipografías del cliente.
 - [ ] Confirmar el número oficial de WhatsApp y el correo que recibe el formulario.
 - [ ] Configurar Resend y Cloudflare Turnstile (anti-spam).

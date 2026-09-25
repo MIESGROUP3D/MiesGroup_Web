@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { ViewTransition } from "react";
 // Fuentes auto-alojadas (sin Google Fonts externo), font-display: swap
 import "@fontsource-variable/instrument-sans";
 import "./globals.css";
@@ -68,10 +67,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <IntroParticles />
         <Providers>
           <Header />
-          {/* Transición suave entre páginas (View Transitions API; sin soporte, navega normal) */}
-          <ViewTransition default="page">
-            <main id="contenido">{children}</main>
-          </ViewTransition>
+          {/* Sin fundido global entre páginas: congelaba la pantalla y trababa la
+              cortina del menú (SideMenu), que ya hace de transición */}
+          <main id="contenido">{children}</main>
           <Footer />
           {/* Botón "Menú" + panel lateral */}
           <SideMenu />
