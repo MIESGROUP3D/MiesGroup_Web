@@ -51,6 +51,10 @@ export default function HomePage() {
               {sortedProjects.length} proyectos de visualización arquitectónica. Elige una categoría y abre cualquiera.
             </p>
           </div>
+        </div>
+        {/* las fotos van de borde a borde (margen mínimo), no limitadas al ancho del contenido:
+            en laptops (MacBook) así ocupan la mayor parte de la pantalla */}
+        <div className="px-[clamp(0.5rem,1.5vw,1.5rem)]">
           <ProjectGrid projects={sortedProjects} />
         </div>
       </section>

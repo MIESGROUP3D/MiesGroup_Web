@@ -6,7 +6,7 @@ import { services } from "@/content/services";
 import type { Project, ServiceSlug } from "@/content/types";
 import { CategoryBar } from "./CategoryBar";
 import { ProjectCard } from "./ProjectCard";
-import { RenderMasonry } from "./RenderMasonry";
+import { RenderGallery } from "./RenderGallery";
 
 /*
  * El filtro vive en la URL (?servicio=web3d) para que se pueda compartir y
@@ -37,7 +37,7 @@ function writeService(value: ServiceSlug | "all") {
 
 /**
  * Portafolio (sección negra de la home): barra de categorías flotante que
- * "respira" (CategoryBar) y grilla uniforme de tarjetas (o mosaico en 3D Rendering).
+ * "respira" (CategoryBar) y grilla uniforme de tarjetas (o galería de renders en 3D Rendering).
  * El filtro vive en la URL (?servicio=…).
  */
 export function ProjectGrid({ projects }: { projects: Project[] }) {
@@ -66,11 +66,11 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         {filtered.length} {filtered.length === 1 ? "proyecto" : "proyectos"}
       </p>
 
-      {/* "3D Rendering" se muestra como galería de renders en mosaico; el resto, como tarjetas */}
+      {/* "3D Rendering" se muestra como galería de renders en filas de 3 y 4; el resto, como tarjetas */}
       <AnimatePresence mode="wait" initial={false}>
         {service === "3d-rendering" ? (
           <motion.div key="renders" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <RenderMasonry projects={filtered} />
+            <RenderGallery projects={filtered} />
           </motion.div>
         ) : (
           <motion.ul
@@ -79,7 +79,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid gap-3 md:grid-cols-2 min-[1800px]:grid-cols-3"
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((p, i) => (
