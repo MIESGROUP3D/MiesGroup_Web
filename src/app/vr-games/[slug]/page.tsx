@@ -4,9 +4,9 @@ export const generateStaticParams = gameParams;
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: PageProps<"/vr-games/[slug]">) {
-  return gameMeta((await params).slug, "es");
+  return gameMeta((await params).slug, "en");
 }
 
 export default async function Page({ params }: PageProps<"/vr-games/[slug]">) {
-  return <GameView slug={(await params).slug} lang="es" />;
+  return <GameView slug={(await params).slug} lang="en" />;
 }

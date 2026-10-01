@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
 
   images: {
     unoptimized: true,
+    qualities: [75, 80],
   },
 };
 

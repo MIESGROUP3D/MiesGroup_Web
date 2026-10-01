@@ -141,13 +141,17 @@ export const gamesEn: Record<string, { title: string; summary: string; controls:
 
 export const gameVideoTitlesEn = ["Video games — piece 1", "Video games — piece 2", "Video games — piece 3", "Video games — piece 4"];
 
-export const channelTitlesEn = ["Architectural visualization reel", "CGI animation — residential tower", "Virtual walkthrough — terraced complex", "Launch — business center"];
-
-/** Conferencias, en el mismo orden que en español (los nombres de eventos no se traducen) */
-export const conferencesEn = [
-  { title: "Immersive visualization to sell off-plan", summary: "How renders, 360° tours and VR shorten the sales cycle in residential projects." },
-  { title: "From rendering to real time: Unreal Engine in architecture", summary: "Workflow, costs and results of moving visualization to real-time engines." },
-  { title: "AI applied to architectural visualization", summary: "Real use cases of generative AI without losing fidelity to the project." },
+export const channelTitlesEn = [
+  "INTERACTIA (educational platform)",
+  "The best part of working at MIESGROUP",
+  "Price: show home vs. VR home",
+  "Our biggest challenges as a company",
+  "Myths about AI",
+  "Let's talk about tech concepts",
+  "Workshop: making short films with artificial intelligence (Colombia 4.0 – 2024)",
+  "MIESGROUP, our commitment!",
+  "The world of Ana.Estesia (S.C.A.R.E)",
+  "MIESGROUP 3D Studio — introduction",
 ];
 
 export const siteEn = {

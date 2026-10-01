@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...entry("home", "", 1),
     ...entry("projects", "", 0.9),
-    ...(["vrGames", "studio", "contact"] as const).flatMap((k) => entry(k, "", 0.8)),
+    ...(["vrGames", "studio", "channel", "talks", "contact"] as const).flatMap((k) => entry(k, "", 0.8)),
     ...projects.flatMap((p) => entry("projects", `/${p.slug}`, 0.7, { images: p.images.map((i) => u(i.src)) })),
     ...games.flatMap((g) => entry("vrGames", `/${g.slug}`, 0.6)),
     ...entry("privacy", "", 0.3),

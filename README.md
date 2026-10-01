@@ -79,11 +79,11 @@ Todo se edita en `src/content/`. Los componentes no tienen texto fijo.
 
 **Branding**: reemplaza los tokens `--color-*` y `--font-*` en `src/app/globals.css`, y el logo provisional en `src/components/Logo.tsx`.
 
-## Idiomas (español / inglés)
+## Idiomas (inglés / español)
 
-El español vive en las URLs de siempre (`/proyectos/`, `/estudio/`…) y el inglés bajo `/en/` (`/en/projects/`, `/en/studio/`…). El selector **ES / EN** (arriba a la derecha) lleva a la misma página en el otro idioma, conservando el filtro y la sección.
+El inglés es el idioma por defecto (pedido del cliente) y vive en las URLs principales (`/`, `/projects/`, `/studio/`…); el español va bajo `/es/` (`/es/proyectos/`, `/es/estudio/`…). El selector de banderas lleva a la misma página en el otro idioma, conservando el filtro y la sección.
 
-- **Rutas equivalentes**: `src/lib/i18n.ts` (`ROUTES`). Para una página nueva: agregar su ruta ahí y crear su archivo en `src/app/...` y `src/app/en/...` usando la misma vista de `src/views/` con `lang="es"` / `lang="en"`.
+- **Rutas equivalentes**: `src/lib/i18n.ts` (`ROUTES`). Para una página nueva: agregar su ruta ahí y crear su archivo en `src/app/...` (inglés) y `src/app/es/...` (español) usando la misma vista de `src/views/` con `lang="en"` / `lang="es"`.
 - **Textos de la interfaz** (menú, botones, formulario…): `src/content/ui.ts`.
 - **Textos del contenido en inglés** (servicios, proyectos, juegos, conferencias, estudio): `src/content/en.ts`. Solo textos; imágenes, años y slugs salen del contenido en español. Si falta una traducción, se muestra el texto en español.
 - **Privacidad**: `src/content/privacy.ts`, con los dos idiomas.

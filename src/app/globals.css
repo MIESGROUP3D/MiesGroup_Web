@@ -114,15 +114,19 @@
 
 /*
  * INTRO DE PARTÍCULAS (IntroParticles)
- * - html.intro-seen: ya se vio en esta sesión (lo marca un script en <head>).
+ * - html.intro-seen: ya se vio en esta pestaña (lo marca un script en <head>).
  * - Movimiento reducido: nunca se muestra.
- * - Respaldo: si el JS no llega a quitarla, se desvanece sola a los 4,5 s.
+ * - Respaldos para que NUNCA quede en blanco:
+ *   · si el JS no carga, se desvanece sola a los 6 s;
+ *   · con el JS andando ([data-live]) igual se retira a los 10 s pase lo que pase
+ *     (además del tope de 8 s del propio componente).
  */
 html.intro-seen .intro { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .intro { display: none; }
 }
-.intro { animation: intro-failsafe 0.6s ease-out 4.5s forwards; }
+.intro:not([data-live]) { animation: intro-failsafe 0.6s ease-out 6s forwards; }
+.intro[data-live] { animation: intro-failsafe 0.6s ease-out 10s forwards; }
 @keyframes intro-failsafe {
   to { opacity: 0; visibility: hidden; pointer-events: none; }
 }
@@ -213,4 +217,10 @@ html.intro-seen .intro { display: none; }
   from { transform: translateX(-60%); opacity: 0.6; }
   50% { opacity: 1; }
   to { transform: translateX(200%); opacity: 0.6; }
+}
+
+/* Channel (ChannelReels): barra de progreso del avance automático */
+@keyframes reel-progress {
+  from { width: 0; }
+  to { width: 100%; }
 }

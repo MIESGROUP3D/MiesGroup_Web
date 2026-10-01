@@ -1,54 +1,66 @@
 import Image from "next/image";
 import { ProjectLink } from "@/components/ProjectLink";
 import { TickerY } from "@/components/TickerY";
-import { VideoFacade } from "@/components/VideoFacade";
-import { getChannelVideos } from "@/content/channel";
-import { getConferences } from "@/content/conferences";
-import { img } from "@/content/media";
+import { CurtainLink } from "@/components/CurtainLink";
+import { LinkedinIcon } from "@/components/icons";
 import { getSortedProjects } from "@/content/projects";
+import { getTeam, initials } from "@/content/team";
 import { site, siteText } from "@/content/site";
 import { t } from "@/content/ui";
-import type { Locale } from "@/lib/i18n";
+import { cn } from "@/lib/cn";
+import { route, type Locale } from "@/lib/i18n";
 import { pageMeta } from "./meta";
 
-// pósteres placeholder para los videos de Vimeo (Vimeo no expone miniatura sin API)
-const posters = ["torre-aurora/01", "pabellon-lago/03", "terrazas-del-valle/02", "centro-empresarial-norte/04"].map((p) => img(`/media/projects/${p}.jpg`, ""));
 
 export const studioMeta = (lang: Locale) => pageMeta(lang, "studio", { title: t(lang).studio.title, description: t(lang).studio.description });
 
 /**
- * Estudio = "About us" + Channel + Conferencias del sitio actual, en una sola
- * página con tres partes y accesos arriba (#estudio, #channel, #conferencias).
+ * Estudio = "About us" + Equipo, con accesos arriba: #estudio y #equipo bajan en
+ * la página; Channel y Talks abren su propia página (/channel, /talks).
  */
 export function StudioView({ lang }: { lang: Locale }) {
   const ui = t(lang);
   const text = siteText(lang);
-  const [firstVideo, ...moreVideos] = getChannelVideos(lang);
-  const talks = [...getConferences(lang)].sort((a, b) => b.date.localeCompare(a.date));
-  const fmt = new Intl.DateTimeFormat(lang === "en" ? "en-US" : "es-CO", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
-  const parts = [
-    { id: "estudio", label: ui.studio.title },
-    { id: "channel", label: ui.studio.channel },
-    { id: "conferencias", label: ui.studio.conferences },
+  // dos grupos: lo que baja en esta página (texto ↓) y lo que abre otra página (píldoras negras ↗)
+  const inPage = [
+    { href: "#estudio", label: ui.studio.about },
+    { href: "#equipo", label: ui.studio.team },
   ];
+  const pages = [
+    { href: `${route(lang, "channel")}/`, label: ui.studio.channel },
+    { href: `${route(lang, "talks")}/`, label: ui.studio.conferences },
+  ];
+  const team = getTeam(lang);
+  const founders = team.filter((m) => m.founder);
+  const crew = team.filter((m) => !m.founder);
 
   return (
     <div lang={lang} className="shell pt-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <h1 className="display text-3xl md:text-4xl">{ui.studio.title}</h1>
-        <nav aria-label={ui.common.inPage} className="flex flex-wrap gap-2">
-          {parts.map((p) => (
-            <a key={p.id} href={`#${p.id}`} className="rounded-full border border-line-strong px-4 py-1.5 text-sm transition-colors hover:border-ink">
-              {p.label}
-            </a>
-          ))}
-        </nav>
-      </div>
-
       {/* 1. Quiénes somos */}
-      <section id="estudio" aria-label={ui.studio.about} className="mt-10 grid scroll-mt-20 gap-10 md:grid-cols-2 md:gap-6">
-        <div>
-          <div className="space-y-4 text-lg leading-relaxed md:max-w-xl md:text-xl">
+      <section id="estudio" aria-label={ui.studio.about} className="grid scroll-mt-20 gap-10 md:grid-cols-2 md:gap-6">
+        {/* título + accesos + texto, centrados en vertical respecto al carrusel de proyectos */}
+        <div className="md:self-center md:pr-6">
+          <h1 className="display text-4xl md:text-5xl">{ui.studio.title}</h1>
+          <nav aria-label={ui.common.inPage} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+            {inPage.map((p) => (
+              <a key={p.href} href={p.href} className="group inline-flex items-center gap-1.5 text-ink-soft transition-colors hover:text-ink">
+                {p.label}
+                <span aria-hidden className="transition-transform duration-300 group-hover:translate-y-0.5">↓</span>
+              </a>
+            ))}
+            <span aria-hidden className="h-5 w-px bg-line-strong" />
+            {pages.map((p) => (
+              <CurtainLink
+                key={p.href}
+                href={p.href}
+                className="group inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-paper transition-colors hover:bg-ink-soft"
+              >
+                {p.label}
+                <span aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
+              </CurtainLink>
+            ))}
+          </nav>
+          <div className="mt-10 space-y-4 text-lg leading-relaxed md:max-w-xl md:text-xl">
             {text.story.map((p) => (
               <p key={p}>{p}</p>
             ))}
@@ -81,49 +93,20 @@ export function StudioView({ lang }: { lang: Locale }) {
         </TickerY>
       </section>
 
-      {/* 2. Channel */}
-      <section id="channel" aria-labelledby="h-channel" className="mt-24 scroll-mt-20 border-t border-line pt-6">
-        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 id="h-channel" className="display text-2xl md:text-3xl">{ui.studio.channel}</h2>
-            <p className="mt-1 text-ink-soft">{ui.studio.channelIntro}</p>
-          </div>
-          <a href={site.social.youtube} target="_blank" rel="noopener noreferrer" className="text-sm underline underline-offset-4 hover:no-underline">
-            {ui.studio.subscribe}
-          </a>
-        </div>
-        <div className="mt-8">
-          <VideoFacade video={firstVideo} fallbackPoster={posters[0]} sizes="100vw" />
-          <ul className="mt-4 grid gap-4 md:grid-cols-3">
-            {moreVideos.map((v, i) => (
-              <li key={"id" in v ? v.id : v.src}>
-                <VideoFacade video={v} fallbackPoster={posters[(i + 1) % posters.length]} sizes="(min-width: 768px) 33vw, 100vw" />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 3. Conferencias */}
-      <section id="conferencias" aria-labelledby="h-conferencias" className="mt-24 scroll-mt-20 border-t border-line pt-6">
-        <h2 id="h-conferencias" className="display text-2xl md:text-3xl">{ui.studio.conferences}</h2>
-        <p className="mt-1 text-ink-soft">{ui.studio.conferencesIntro}</p>
-        <ol className="mt-8 border-t border-line">
-          {talks.map((c) => (
-            <li key={c.date} className="grid gap-2 border-b border-line py-6 md:grid-cols-12 md:gap-4">
-              <time dateTime={c.date} className="text-sm text-muted md:col-span-2">{fmt.format(new Date(c.date))}</time>
-              <div className="md:col-span-7">
-                <h3 className="text-lg font-medium md:text-xl">{c.title}</h3>
-                <p className="mt-1 text-ink-soft">{c.summary}</p>
-              </div>
-              <p className="text-sm text-muted md:col-span-3 md:text-right">
-                {c.event}
-                <br />
-                {c.city}
-              </p>
-            </li>
+      {/* 2. Equipo en marco circular: socios fundadores arriba, centrados y grandes; el resto del equipo debajo */}
+      <section id="equipo" aria-labelledby="h-equipo" className="mt-24 scroll-mt-20 border-t border-line pt-6">
+        <h2 id="h-equipo" className="display text-2xl md:text-3xl">{ui.studio.team}</h2>
+        <p className="mt-1 text-ink-soft">{ui.studio.teamIntro}</p>
+        <ul className="mt-12 flex flex-wrap justify-center gap-x-10 gap-y-12 md:gap-x-24">
+          {founders.map((m) => (
+            <TeamMember key={m.name} member={m} big />
           ))}
-        </ol>
+        </ul>
+        <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-line pt-10 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {crew.map((m) => (
+            <TeamMember key={m.name} member={m} />
+          ))}
+        </ul>
       </section>
 
       <section id="trabaja" className="mt-24 grid scroll-mt-20 gap-6 border-t border-line pt-6 md:grid-cols-2">
@@ -137,5 +120,47 @@ export function StudioView({ lang }: { lang: Locale }) {
         </p>
       </section>
     </div>
+  );
+}
+
+/** Persona del equipo: foto circular (blanco y negro, color al pasar el mouse) o iniciales si aún no hay foto. */
+function TeamMember({ member: m, big = false }: { member: ReturnType<typeof getTeam>[number]; big?: boolean }) {
+  const body = (
+    <>
+      <div className={cn("relative grid place-items-center overflow-hidden rounded-full bg-paper-2 ring-1 ring-line transition-shadow", m.linkedin && "group-hover:ring-ink", big ? "size-36 sm:size-48 md:size-60" : "size-24 md:size-28")}>
+        {m.photo ? (
+          <Image
+            src={m.photo.src}
+            alt={m.photo.alt}
+            fill
+            quality={80}
+            sizes={big ? "240px" : "112px"}
+            className="object-cover object-top grayscale transition-[filter,transform] duration-500 group-hover:scale-105 group-hover:grayscale-0"
+          />
+        ) : (
+          <span aria-hidden className="text-lg font-medium tracking-[0.08em] text-muted md:text-xl">
+            {initials(m.name)}
+          </span>
+        )}
+      </div>
+      <p className={cn("mt-4 inline-flex items-center gap-1.5 font-medium", big ? "text-lg md:text-xl" : "text-sm md:text-base", m.linkedin && "group-hover:underline group-hover:underline-offset-4")}>
+        {m.name}
+        {m.linkedin && <LinkedinIcon className="size-3.5 shrink-0 text-muted transition-colors group-hover:text-ink" />}
+      </p>
+      <p className={cn("text-muted", big ? "text-sm md:text-base" : "text-xs md:text-sm")}>{m.role}</p>
+    </>
+  );
+  const align = "group flex flex-col items-center text-center";
+  return (
+    <li className={m.linkedin ? undefined : align}>
+      {/* con LinkedIn: toda la persona (foto + nombre) es el enlace, en pestaña nueva */}
+      {m.linkedin ? (
+        <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} — LinkedIn`} className={align}>
+          {body}
+        </a>
+      ) : (
+        body
+      )}
+    </li>
   );
 }

@@ -29,9 +29,11 @@ export function HomeView({ lang }: { lang: Locale }) {
         key: s.slug,
         title: s.name,
         description: s.tagline,
-        cta: s.slug === "vr-games" ? ui.home.ctaVrGames : ui.home.ctaProjects,
+        cta: ui.home.ctaProjects,
         // VR/Games tiene página propia (VR + juegos); el resto: la sección de proyectos ya filtrada
-        href: s.slug === "vr-games" ? `${route(lang, "vrGames")}/` : `${route(lang, "projects")}/?servicio=${s.slug}`,
+        // todos los servicios (también VR/Juegos) abren su categoría en Proyectos;
+        // la página completa de VR/Juegos se abre desde el botón "Ver más" de esa categoría
+        href: `${route(lang, "projects")}/?servicio=${s.slug}`,
         image: s.cover,
       };
     }),

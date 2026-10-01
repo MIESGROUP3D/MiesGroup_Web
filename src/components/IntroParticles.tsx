@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { withBase } from "@/lib/basePath";
+import { INTRO_LOGO } from "@/lib/brand";
 
 /**
  * Intro de entrada: partículas que vuelan desde toda la pantalla y forman el
  * logo (ref. Framer "Particle Reveal Pro"), luego el logo queda nítido y la
  * capa se desvanece hacia el sitio.
  *
- * - Una vez por sesión (sessionStorage). Un script inline en el <head>
- *   (layout.tsx) marca `html.intro-seen` ANTES de pintar, así en visitas
- *   siguientes no hay ni un frame de pantalla blanca.
+ * - SIEMPRE en cada pestaña nueva (pedido del cliente); al recargar o volver
+ *   atrás/adelante en la misma pestaña no se repite (marca en window.name). Un script inline en el <head> (layout.tsx) marca
+ *   `html.intro-seen` ANTES de pintar, así no hay ni un frame de pantalla blanca.
  * - NO se puede saltar (pedido del cliente): sin clic/tecla/scroll para
  *   cerrarla y con el scroll de la página bloqueado mientras dura (~3–4 s).
  * - Con prefers-reduced-motion no se muestra (CSS): es una protección para
@@ -17,11 +19,13 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
  *   de respaldo en globals.css).
  * - Canvas 2D: ~1.5–2.5k partículas, un solo requestAnimationFrame.
  */
-const STORAGE_KEY = "mies-intro";
+/** Marca en window.name: dura mientras viva la pestaña (sobrevive a recargas) y NO pasa a pestañas nuevas. */
+const TAB_MARK = "mies-intro";
 const FORM_MS = 1500; // vuelo hasta el logo
 const SPREAD_MS = 450; // desfase máximo entre partículas
 const HOLD_MS = 700; // logo nítido en pantalla
 const FADE_MS = 700; // desvanecido de la capa
+const MAX_MS = 8000; // tope de seguridad: pase lo que pase, la capa blanca se retira
 
 type Particle = { x0: number; y0: number; tx: number; ty: number; delay: number; size: number };
 
@@ -39,9 +43,6 @@ export function IntroParticles() {
   useEffect(() => {
     if (skip) return;
     const root = document.documentElement;
-    try {
-      sessionStorage.setItem(STORAGE_KEY, "1");
-    } catch {}
 
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -49,6 +50,10 @@ export function IntroParticles() {
       const id = setTimeout(() => setPhase("done"));
       return () => clearTimeout(id);
     }
+
+    // el JS tomó el control: se desactiva el respaldo CSS (globals.css), que solo existe
+    // por si el JS no carga; desde aquí los tiempos los manejan whenVisible + MAX_MS
+    canvas.parentElement?.setAttribute("data-live", "");
 
     // sin scroll mientras dura la intro (la página se movería por detrás sin verse)
     root.style.overflow = "hidden";
@@ -66,43 +71,45 @@ export function IntroParticles() {
     };
 
     const start = async () => {
-      // esperar la tipografía (máx. 600 ms) para muestrear el logo con la fuente real
-      await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 600))]);
+      // cargar el logo oficial completo (con "3D Studio"), precargado desde el <head>.
+      // Si tarda más de 4 s o falla, la intro se arma igual con el nombre en texto.
+      const logo = new Image();
+      logo.src = withBase(INTRO_LOGO);
+      const loaded = await Promise.race([logo.decode().then(() => true, () => false), new Promise<boolean>((r) => setTimeout(() => r(false), 4000))]);
       if (finished) return;
+      // se marca como vista recién cuando de verdad arranca (no antes de cargar)
+      window.name = TAB_MARK;
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = window.innerWidth;
       const h = window.innerHeight;
+      if (!w || !h) return finish(); // sin tamaño no hay nada que dibujar: mostrar el sitio
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // 1) dibujar el logo en un canvas oculto y leer sus píxeles
-      const size = Math.min(w * 0.16, 190);
-      const bold = `600 ${size}px "Instrument Sans Variable", "Helvetica Neue", Arial, sans-serif`;
-      const regular = `400 ${size}px "Instrument Sans Variable", "Helvetica Neue", Arial, sans-serif`;
+      const lw = Math.min(w * 0.8, 900);
+      const lh = loaded ? (lw * logo.naturalHeight) / logo.naturalWidth : lw * 0.15;
+      const x = (w - lw) / 2;
+      const y = (h - lh) / 2;
       const off = document.createElement("canvas");
       off.width = w;
       off.height = h;
       const o = off.getContext("2d", { willReadFrequently: true });
       if (!o) return finish();
-      o.textBaseline = "middle";
-      o.font = bold;
-      const wA = o.measureText("mies").width;
-      o.font = regular;
-      const wB = o.measureText("group").width;
-      const x = (w - wA - wB) / 2;
+      const fontPx = lh * 0.75;
       const draw = (c: CanvasRenderingContext2D) => {
+        if (loaded) return c.drawImage(logo, x, y, lw, lh);
+        c.textAlign = "center";
         c.textBaseline = "middle";
-        c.font = bold;
-        c.fillText("mies", x, h / 2);
-        c.font = regular;
-        c.fillText("group", x + wA, h / 2);
+        c.font = `600 ${fontPx}px "Instrument Sans Variable", "Helvetica Neue", Arial, sans-serif`;
+        c.fillText("MIESGROUP", w / 2, h / 2, lw);
       };
       draw(o);
 
       const data = o.getImageData(0, 0, w, h).data;
-      const gap = Math.max(3, Math.round(size / 38));
+      const gap = Math.max(3, Math.round(lw / 180));
       const dot = Math.max(2, gap * 0.7);
       // "sólido" = píxel claramente dentro de la letra (no el borde suavizado)
       const solid = (x: number, y: number) => {
@@ -161,7 +168,25 @@ export function IntroParticles() {
       };
       raf = requestAnimationFrame(frame);
     };
-    start();
+    // la pestaña puede abrirse en segundo plano o pre-renderizada (ancho 0, sin cuadros de
+    // animación): esperar a que sea visible para medir y animar
+    const whenVisible = () =>
+      document.visibilityState === "visible"
+        ? Promise.resolve()
+        : new Promise<void>((r) => {
+            const on = () => {
+              if (document.visibilityState !== "visible") return;
+              document.removeEventListener("visibilitychange", on);
+              r();
+            };
+            document.addEventListener("visibilitychange", on);
+          });
+    // NUNCA dejar la pantalla en blanco: tope fijo desde que monta (aunque la pestaña siga
+    // oculta o algo se trabe) y cualquier error → mostrar el sitio
+    timers.push(setTimeout(finish, MAX_MS));
+    whenVisible()
+      .then(() => (finished ? undefined : start()))
+      .catch(finish);
 
     return () => {
       finished = true;

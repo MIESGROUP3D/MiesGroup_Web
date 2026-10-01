@@ -4,7 +4,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { getServices } from "@/content/services";
 import { t } from "@/content/ui";
+import Link from "next/link";
 import { useLang } from "@/lib/useLang";
+import { updateCurrent } from "@/lib/backstack";
+import { BASE_PATH } from "@/lib/basePath";
+import { route } from "@/lib/i18n";
+import { navigateWithCurtain } from "@/lib/curtain";
 import type { Project, ServiceSlug } from "@/content/types";
 import { CategoryBar } from "./CategoryBar";
 import { ProjectCard } from "./ProjectCard";
@@ -33,6 +38,9 @@ function writeService(value: ServiceSlug) {
   params.set("servicio", value);
   const qs = params.toString();
   window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
+  // la flecha "volver" de la cabecera regresa a esta misma categoría
+  const path = window.location.pathname.slice(BASE_PATH.length).replace(/\/$/, "") || "/";
+  updateCurrent(`${path}${qs ? `?${qs}` : ""}`);
   window.dispatchEvent(new Event(URL_EVENT));
 }
 
@@ -102,6 +110,20 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
           </motion.ul>
         )}
       </AnimatePresence>
+
+      {/* VR/Juegos: debajo de las tarjetas, acceso a la página completa (recorridos VR + juegos jugables) */}
+      {service === "vr-games" && (
+        <div className="mt-10 flex justify-center md:mt-14">
+          <Link
+            href={`${route(lang, "vrGames")}/`}
+            onClick={(e) => navigateWithCurtain(e, `${route(lang, "vrGames")}/`, e.currentTarget)}
+            className="group inline-flex items-center gap-3 rounded-full border border-paper/30 px-7 py-3.5 text-sm text-paper transition-colors hover:bg-paper hover:text-ink"
+          >
+            {ui.home.vrGamesMore}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

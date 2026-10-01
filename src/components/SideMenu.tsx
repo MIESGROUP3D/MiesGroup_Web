@@ -148,7 +148,7 @@ export function SideMenu() {
               {/* logo a la altura del botón Cerrar (misma fila que el header del sitio) */}
               <div className="flex h-16 shrink-0 items-center">
                 <Link href={home} onClick={(e) => navigate(e, home)} aria-label={ui.common.homeAria}>
-                  <Logo />
+                  <Logo tone="light" />
                 </Link>
               </div>
     

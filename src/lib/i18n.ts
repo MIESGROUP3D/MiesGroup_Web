@@ -1,26 +1,28 @@
 /**
- * Idiomas del sitio: español (por defecto, en las URLs actuales) e inglés
- * (bajo /en/). Cada página tiene su equivalente en el otro idioma según ROUTES.
+ * Idiomas del sitio: inglés (por defecto, pedido del cliente: URLs principales)
+ * y español (bajo /es/). Cada página tiene su equivalente en el otro idioma según ROUTES.
  *
  * Para agregar una página traducida: sumar su ruta aquí y crear su archivo
- * en src/app/en/... usando la misma vista (src/views) con lang="en".
+ * en src/app/... (inglés) y src/app/es/... (español) usando la misma vista (src/views).
  */
 export type Locale = "es" | "en";
 export const LOCALES: Locale[] = ["es", "en"];
-export const DEFAULT_LOCALE: Locale = "es";
+export const DEFAULT_LOCALE: Locale = "en";
 
 const ROUTES = {
-  home: { es: "/", en: "/en" },
-  projects: { es: "/proyectos", en: "/en/projects" },
-  vrGames: { es: "/vr-games", en: "/en/vr-games" },
-  studio: { es: "/estudio", en: "/en/studio" },
-  contact: { es: "/contacto", en: "/en/contact" },
-  privacy: { es: "/privacidad", en: "/en/privacy" },
+  home: { en: "/", es: "/es" },
+  projects: { en: "/projects", es: "/es/proyectos" },
+  vrGames: { en: "/vr-games", es: "/es/vr-games" },
+  studio: { en: "/studio", es: "/es/estudio" },
+  channel: { en: "/channel", es: "/es/channel" },
+  talks: { en: "/talks", es: "/es/charlas" },
+  contact: { en: "/contact", es: "/es/contacto" },
+  privacy: { en: "/privacy", es: "/es/privacidad" },
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;
 
-/** Ruta de una sección en un idioma: route("en", "projects", "/torre-aurora") → "/en/projects/torre-aurora" */
+/** Ruta de una sección en un idioma: route("es", "projects", "/torre-aurora") → "/es/proyectos/torre-aurora" */
 export function route(lang: Locale, key: RouteKey, rest = ""): string {
   const base: string = ROUTES[key][lang];
   if (!rest) return base;
@@ -29,14 +31,14 @@ export function route(lang: Locale, key: RouteKey, rest = ""): string {
 
 const normalize = (p: string) => p.replace(/\/+$/, "") || "/";
 
-/** Idioma de una ruta (sin basePath): /en/… → "en"; el resto → "es" */
+/** Idioma de una ruta (sin basePath): /es/… → "es"; el resto → "en" */
 export function localeFromPath(pathname: string): Locale {
   const p = normalize(pathname);
-  return p === "/en" || p.startsWith("/en/") ? "en" : "es";
+  return p === "/es" || p.startsWith("/es/") ? "es" : "en";
 }
 
 /**
- * La misma página en el otro idioma: /proyectos/torre-aurora → /en/projects/torre-aurora.
+ * La misma página en el otro idioma: /projects/torre-aurora → /es/proyectos/torre-aurora.
  * Busca la sección cuyo prefijo coincide más largo; si no hay equivalente, va al inicio.
  */
 export function switchLocalePath(pathname: string, to: Locale): string {
@@ -53,7 +55,7 @@ export function switchLocalePath(pathname: string, to: Locale): string {
 }
 
 /** Enlaces alternativos para buscadores (hreflang) de una sección. */
-export function alternates(key: RouteKey, rest = "", current: Locale = "es") {
+export function alternates(key: RouteKey, rest = "", current: Locale = DEFAULT_LOCALE) {
   return {
     canonical: route(current, key, rest),
     languages: { es: route("es", key, rest), en: route("en", key, rest) },

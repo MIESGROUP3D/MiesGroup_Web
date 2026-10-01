@@ -7,24 +7,27 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { HtmlLang } from "@/components/HtmlLang";
 import { IntroParticles } from "@/components/IntroParticles";
+import { INTRO_LOGO } from "@/lib/brand";
+import { withBase } from "@/lib/basePath";
 import { ProjectModal } from "@/components/ProjectModal";
 import { PageCurtain } from "@/components/PageCurtain";
 import { SideMenu } from "@/components/SideMenu";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
-import { site } from "@/content/site";
+import { site, siteText } from "@/content/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Estudio 3D de visualización arquitectónica`,
+    default: `${site.name} — Architectural visualization 3D studio`,
     template: `%s · ${site.name}`,
   },
-  description: site.description,
+  description: siteText("en").description,
   openGraph: {
     type: "website",
-    locale: "es_CO",
+    locale: "en_US",
+    alternateLocale: ["es_CO"],
     siteName: site.name,
     images: [{ url: site.hero.poster.src, width: site.hero.poster.width, height: site.hero.poster.height, alt: site.hero.poster.alt }],
   },
@@ -56,15 +59,19 @@ const jsonLd = {
   address: site.locations.map((l) => ({ "@type": "PostalAddress", addressLocality: l.city, addressCountry: l.code })),
 };
 
-const introScript = `try{if(sessionStorage.getItem("mies-intro"))document.documentElement.classList.add("intro-seen")}catch(e){}`;
+// Intro en CADA pestaña nueva; solo se omite al recargar/volver en la misma pestaña,
+// que conserva window.name (a diferencia de sessionStorage, no se copia a pestañas nuevas).
+const introScript = `try{if(window.name==="mies-intro")document.documentElement.classList.add("intro-seen")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // suppressHydrationWarning: el script de abajo agrega la clase intro-seen antes de hidratar
-    <html lang="es" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Intro de partículas: si ya se vio en esta sesión, ocultarla antes del primer pintado */}
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        {/* el logo de la intro se pide de inmediato (si no, a veces no llegaba a tiempo y la intro se saltaba) */}
+        <link rel="preload" as="image" href={withBase(INTRO_LOGO)} />
       </head>
       <body className="min-h-dvh">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

@@ -37,7 +37,9 @@ export function VideoFacade({
   const [active, setActive] = useState(autoLoad);
   const playLabel = t(useLang()).common.play;
   const poster = video.poster ?? fallbackPoster;
-  const ytThumb = video.provider === "youtube" ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg` : null;
+  // miniatura de YouTube en HD (maxres); si el video no la tiene, se cae a la estándar (hq)
+  const [ytHd, setYtHd] = useState(true);
+  const ytThumb = video.provider === "youtube" ? `https://i.ytimg.com/vi/${video.id}/${ytHd ? "maxresdefault" : "hqdefault"}.jpg` : null;
 
   return (
     <div className={cn("group relative aspect-video overflow-hidden bg-paper-2", className)}>
@@ -59,7 +61,15 @@ export function VideoFacade({
             <Image src={poster.src} alt="" fill sizes={sizes} quality={60} className="object-cover opacity-80 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100" />
           ) : ytThumb ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={ytThumb} alt="" loading="lazy" className="absolute inset-0 size-full object-cover opacity-80" />
+            <img
+              src={ytThumb}
+              alt=""
+              loading="lazy"
+              // YouTube responde 404 con una imagen gris de 120 px (no dispara onError): se detecta por el tamaño
+              onLoad={(e) => e.currentTarget.naturalWidth <= 120 && setYtHd(false)}
+              onError={() => setYtHd(false)}
+              className="absolute inset-0 size-full object-cover opacity-80 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100"
+            />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-paper-2 to-paper" />
           )}

@@ -34,7 +34,7 @@ export const site = {
     { city: "Los Ángeles", country: "Estados Unidos", code: "US", timeZone: "America/Los_Angeles" },
   ],
   social: {
-    youtube: "https://www.youtube.com/@miesgrouparq6892",
+    youtube: "https://www.youtube.com/channel/UCJHw00bC20XRR4f09kdch5A",
     instagram: "https://www.instagram.com/miesgroup/",
     linkedin: "https://www.linkedin.com/in/miesgroup/",
   },

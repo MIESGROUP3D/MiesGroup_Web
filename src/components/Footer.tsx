@@ -12,6 +12,8 @@ export function Footer() {
   const lang = localeFromPath(path);
   if (path === route(lang, "home")) return null;
   const year = new Date().getFullYear();
+  // páginas negras (Proyectos, Channel): ya terminan con su propio difuminado, el footer va pegado
+  const afterDark = path === route(lang, "projects") || path === route(lang, "channel");
   const social = [
     ["Instagram", site.social.instagram],
     ["YouTube", site.social.youtube],
@@ -19,7 +21,7 @@ export function Footer() {
     ["WhatsApp", whatsappHref(siteText(lang).whatsappMessage)],
   ];
   return (
-    <footer className="mt-40">
+    <footer className={afterDark ? "mt-6" : "mt-40"}>
       <div className="shell grid gap-8 border-t border-line py-10 text-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <a href={`mailto:${site.email}`} className="link-underline">{site.email}</a>

@@ -92,12 +92,3 @@ export interface Game {
   status: "jugable" | "proximamente";
 }
 
-export interface Conference {
-  title: string;
-  event: string;
-  date: string; // ISO yyyy-mm-dd
-  city: string;
-  summary: string;
-  video?: VideoRef;
-  link?: string;
-}

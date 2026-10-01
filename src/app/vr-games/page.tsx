@@ -1,7 +1,7 @@
 import { VrGamesView, vrGamesMeta } from "@/views/VrGamesView";
 
-export const metadata = vrGamesMeta("es");
+export const metadata = vrGamesMeta("en");
 
 export default function Page() {
-  return <VrGamesView lang="es" />;
+  return <VrGamesView lang="en" />;
 }

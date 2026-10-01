@@ -62,8 +62,8 @@ const es = {
   theirPolicy: "Su política de privacidad",
   thirdParties: [
     { name: "GitHub Pages (GitHub, Inc.)", use: "Aloja el sitio.", when: "Al visitar cualquier página: recibe datos técnicos de acceso (IP, navegador).", policy: policies.github },
-    { name: "Vimeo", use: "Reproduce los videos del estudio.", when: "Solo cuando pulsas reproducir en un video de Vimeo (se carga con la opción “no rastrear”).", policy: policies.vimeo },
-    { name: "YouTube (Google)", use: "Reproduce videos del canal.", when: "Solo cuando pulsas reproducir; se usa el modo de privacidad mejorada (youtube-nocookie.com).", policy: policies.google },
+    { name: "Vimeo", use: "Reproduce los videos del estudio.", when: "Al pulsar reproducir en un video de Vimeo y, en la página de Conferencias, al abrirla (video de fondo sin sonido). Siempre con la opción “no rastrear”; Vimeo recibe tu dirección IP.", policy: policies.vimeo },
+    { name: "YouTube (Google)", use: "Reproduce videos del canal.", when: "En la página Channel se cargan las miniaturas desde i.ytimg.com (Google recibe tu dirección IP). El reproductor solo se carga cuando pulsas reproducir, en modo de privacidad mejorada (youtube-nocookie.com).", policy: policies.google },
     { name: "WhatsApp (Meta)", use: "Chat directo con el estudio.", when: "Solo si eliges escribirnos por WhatsApp.", policy: policies.whatsapp },
     { name: "Instagram (Meta) y LinkedIn", use: "Perfiles del estudio en redes sociales.", when: "Solo si abres esos enlaces; el sitio no carga sus botones ni rastreadores.", policy: policies.instagram },
   ] as ThirdParty[],
@@ -126,8 +126,8 @@ const en: Privacy = {
   theirPolicy: "Their privacy policy",
   thirdParties: [
     { name: "GitHub Pages (GitHub, Inc.)", use: "Hosts the website.", when: "When you visit any page: receives technical access data (IP, browser).", policy: policies.github },
-    { name: "Vimeo", use: "Plays the studio's videos.", when: "Only when you press play on a Vimeo video (loaded with the “do not track” option).", policy: policies.vimeo },
-    { name: "YouTube (Google)", use: "Plays channel videos.", when: "Only when you press play; privacy-enhanced mode is used (youtube-nocookie.com).", policy: policies.google },
+    { name: "Vimeo", use: "Plays the studio's videos.", when: "When you press play on a Vimeo video and, on the Talks page, when you open it (silent background video). Always with the “do not track” option; Vimeo receives your IP address.", policy: policies.vimeo },
+    { name: "YouTube (Google)", use: "Plays channel videos.", when: "On the Channel page, thumbnails are loaded from i.ytimg.com (Google receives your IP address). The player only loads when you press play, in privacy-enhanced mode (youtube-nocookie.com).", policy: policies.google },
     { name: "WhatsApp (Meta)", use: "Direct chat with the studio.", when: "Only if you choose to message us on WhatsApp.", policy: policies.whatsapp },
     { name: "Instagram (Meta) and LinkedIn", use: "The studio's social media profiles.", when: "Only if you open those links; the website doesn't load their buttons or trackers.", policy: policies.instagram },
   ],
