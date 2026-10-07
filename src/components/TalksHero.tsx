@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { Play, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useVimeoPlaying } from "@/lib/useVimeoPlaying";
 import { createPortal } from "react-dom";
 import type { MediaImage, VideoRef } from "@/content/types";
 import { t } from "@/content/ui";
@@ -34,7 +35,8 @@ export function TalksHero({
   const ui = t(useLang());
   const [open, setOpen] = useState(false);
   // el iframe de Vimeo muestra negro y un indicador de carga hasta que arranca: queda invisible hasta entonces
-  const [ready, setReady] = useState(false);
+  const bg = useRef<HTMLIFrameElement>(null);
+  const ready = useVimeoPlaying(bg);
 
   useEffect(() => {
     if (!open) return;
@@ -52,12 +54,12 @@ export function TalksHero({
       {/* fondo: póster + video en bucle a modo "cover" */}
       <Image src={poster.src} alt="" fill priority quality={75} sizes="100vw" className="-z-20 object-cover" />
       <iframe
+        ref={bg}
         src={`https://player.vimeo.com/video/${video.id}?background=1&dnt=1`}
         title=""
         aria-hidden
         tabIndex={-1}
         allow="autoplay; fullscreen"
-        onLoad={() => setTimeout(() => setReady(true), 1200)}
         style={{ opacity: ready ? 1 : 0 }}
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 transition-opacity duration-1000 h-[max(80svh,56.25vw)] w-[max(100vw,calc(80svh*16/9))] -translate-x-1/2 -translate-y-1/2 border-0 motion-reduce:hidden"
       />

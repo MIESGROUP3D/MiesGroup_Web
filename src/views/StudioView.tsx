@@ -1,9 +1,6 @@
 import Image from "next/image";
-import { ProjectLink } from "@/components/ProjectLink";
-import { TickerY } from "@/components/TickerY";
 import { CurtainLink } from "@/components/CurtainLink";
 import { LinkedinIcon } from "@/components/icons";
-import { getSortedProjects } from "@/content/projects";
 import { getTeam, initials } from "@/content/team";
 import { site, siteText } from "@/content/site";
 import { t } from "@/content/ui";
@@ -37,11 +34,12 @@ export function StudioView({ lang }: { lang: Locale }) {
   return (
     <div lang={lang} className="shell pt-6">
       {/* 1. Quiénes somos */}
-      <section id="estudio" aria-label={ui.studio.about} className="grid scroll-mt-20 gap-10 md:grid-cols-2 md:gap-6">
-        {/* título + accesos + texto, centrados en vertical respecto al carrusel de proyectos */}
-        <div className="md:self-center md:pr-6">
-          <h1 className="display text-4xl md:text-5xl">{ui.studio.title}</h1>
-          <nav aria-label={ui.common.inPage} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+      <section id="estudio" aria-label={ui.studio.about} className="scroll-mt-20 pb-8 pt-6 md:pt-12">
+        {/* título, accesos e historia del estudio, centrados */}
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-muted">MIES Group · 3D Studio</p>
+          <h1 className="display mt-3 text-[clamp(3.5rem,9vw,7.5rem)] font-semibold leading-[0.9] tracking-[-0.05em]">{ui.studio.title}</h1>
+          <nav aria-label={ui.common.inPage} className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm">
             {inPage.map((p) => (
               <a key={p.href} href={p.href} className="group inline-flex items-center gap-1.5 text-ink-soft transition-colors hover:text-ink">
                 {p.label}
@@ -60,37 +58,29 @@ export function StudioView({ lang }: { lang: Locale }) {
               </CurtainLink>
             ))}
           </nav>
-          <div className="mt-10 space-y-4 text-lg leading-relaxed md:max-w-xl md:text-xl">
+          <div className="mt-12 space-y-5 text-lg leading-relaxed md:text-2xl md:leading-relaxed">
             {text.story.map((p) => (
               <p key={p}>{p}</p>
             ))}
           </div>
-          <dl className="mt-10 grid content-start gap-x-6 gap-y-1 sm:grid-cols-[8rem_1fr]">
-            <dt className="text-muted">{ui.studio.founded}</dt>
-            <dd>{site.foundedYear}, Córdoba (AR)</dd>
-            <dt className="text-muted">{ui.studio.offices}</dt>
-            <dd>{text.locations.map((l) => `${l.city} (${l.code})`).join(", ")}</dd>
-            <dt className="text-muted">{ui.studio.contact}</dt>
-            <dd>
-              <a href={`mailto:${site.email}`} className="underline underline-offset-4 hover:no-underline">{site.email}</a>
-            </dd>
+          {/* datos en tres columnas centradas */}
+          <dl className="mt-12 grid w-full gap-6 border-t border-line pt-6 sm:grid-cols-3">
+            <div>
+              <dt className="text-sm text-muted">{ui.studio.founded}</dt>
+              <dd className="mt-1">{site.foundedYear}, Córdoba (AR)</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted">{ui.studio.offices}</dt>
+              <dd className="mt-1">{text.locations.map((l) => `${l.city} (${l.code})`).join(", ")}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted">{ui.studio.contact}</dt>
+              <dd className="mt-1">
+                <a href={`mailto:${site.email}`} className="underline underline-offset-4 hover:no-underline">{site.email}</a>
+              </dd>
+            </div>
           </dl>
         </div>
-
-        {/* Ticker vertical: el trabajo del estudio pasando junto al texto */}
-        <TickerY className="h-[30rem] md:h-[40rem]">
-          {getSortedProjects(lang).map((p) => (
-            <ProjectLink key={p.slug} slug={p.slug} className="group block pb-6">
-              <div className="relative aspect-[3/2] bg-paper-2">
-                <Image src={p.cover.src} alt={p.cover.alt} fill quality={70} sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-              </div>
-              <p className="mt-2 flex justify-between gap-4 text-sm">
-                <span className="font-medium group-hover:underline group-hover:underline-offset-4">{p.title}</span>
-                <span className="text-muted">{p.year}</span>
-              </p>
-            </ProjectLink>
-          ))}
-        </TickerY>
       </section>
 
       {/* 2. Equipo en marco circular: socios fundadores arriba, centrados y grandes; el resto del equipo debajo */}
@@ -134,7 +124,7 @@ function TeamMember({ member: m, big = false }: { member: ReturnType<typeof getT
             alt={m.photo.alt}
             fill
             quality={80}
-            sizes={big ? "240px" : "112px"}
+            sizes={big ? "180px" : "112px"}
             className="object-cover object-top grayscale transition-[filter,transform] duration-500 group-hover:scale-105 group-hover:grayscale-0"
           />
         ) : (

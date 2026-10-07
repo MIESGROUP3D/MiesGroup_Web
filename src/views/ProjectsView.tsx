@@ -16,13 +16,11 @@ export function ProjectsView({ lang }: { lang: Locale }) {
   return (
     <div lang={lang}>
       <section className="bg-ink pb-20 text-paper md:pb-28" aria-labelledby="h-proyectos">
+        {/* título centrado encima de la barra de categorías; en escritorio sube a la fila del logo */}
         <div className="shell">
-          <div className="flex flex-col gap-3 pb-8 pt-6 md:flex-row md:items-end md:justify-between">
-            <h1 id="h-proyectos" className="display text-4xl md:text-6xl">
-              {ui.title}
-            </h1>
-            <p className="max-w-sm text-paper/75 md:text-right">{ui.intro(projects.length)}</p>
-          </div>
+          <h1 id="h-proyectos" className="display relative pb-3 text-center text-xl md:-mt-[2.85rem] md:pb-4 md:text-2xl">
+            {ui.title}
+          </h1>
         </div>
         {/* las fotos van de borde a borde (margen mínimo): en laptops ocupan la mayor parte de la pantalla */}
         <div className="px-[clamp(0.5rem,1.5vw,1.5rem)]">

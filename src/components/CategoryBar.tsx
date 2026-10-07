@@ -37,7 +37,7 @@ export function CategoryBar<T extends string>({
   const glass = "relative overflow-hidden border border-paper/15 bg-paper/[0.07] shadow-[0_10px_40px_-12px_rgba(0,0,0,.6)] backdrop-blur-xl";
 
   return (
-    <div className="sticky top-16 z-30 flex justify-center pb-8">
+    <div className="sticky top-16 z-30 flex justify-center pb-5">
       {/* Escritorio */}
       <motion.div
         role="group"

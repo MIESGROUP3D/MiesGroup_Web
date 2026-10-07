@@ -14,6 +14,12 @@ import type { Project, ServiceSlug } from "@/content/types";
 import { CategoryBar } from "./CategoryBar";
 import { ProjectCard } from "./ProjectCard";
 import { RenderGallery } from "./RenderGallery";
+import { TourGallery } from "./TourGallery";
+import { VideoBanner } from "./VideoBanner";
+import { CgiGallery } from "./CgiGallery";
+import { getCgiVideos } from "@/content/cgi";
+import { getGameVideos } from "@/content/game-videos";
+import { tours } from "@/content/tours";
 
 /*
  * El filtro vive en la URL (?servicio=web3d) para que se pueda compartir y
@@ -62,6 +68,9 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
   const usedServices = useMemo(() => getServices(lang).filter((s) => projects.some((p) => p.services.includes(s.slug))), [projects, lang]);
 
   // sin categoría en la URL (o desconocida) → la primera (3D Rendering); no hay "Todos"
+  const tourService = usedServices.find((s) => s.slug === "360-virtual-tour");
+  const cgiService = usedServices.find((s) => s.slug === "cgi-animation");
+  const gamesService = usedServices.find((s) => s.slug === "vr-games");
   const raw = new URLSearchParams(search).get("servicio");
   const service: ServiceSlug = usedServices.find((s) => s.slug === raw)?.slug ?? usedServices[0].slug;
   const filtered = projects.filter((p) => p.services.includes(service));
@@ -82,6 +91,43 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         {service === "3d-rendering" ? (
           <motion.div key="renders" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
             <RenderGallery projects={filtered} />
+          </motion.div>
+        ) : service === "cgi-animation" ? (
+          // animaciones CGI reales (Vimeo), con el banner de video de la página anterior
+          <motion.div key="cgi" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            <VideoBanner
+              src1080="/media/cgi/banner-cgi-1080.mp4"
+              src720="/media/cgi/banner-cgi-720.mp4"
+              poster="/media/cgi/banner-cgi.jpg"
+              title={cgiService?.name ?? ""}
+              text={cgiService?.tagline ?? ""}
+            />
+            <CgiGallery videos={getCgiVideos(lang)} />
+          </motion.div>
+        ) : service === "vr-games" ? (
+          // videojuegos y VR (Vimeo), con el banner de video de la página anterior
+          <motion.div key="games" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            <VideoBanner
+              src1080="/media/games/banner-games-1080.mp4"
+              src720="/media/games/banner-games-720.mp4"
+              poster="/media/games/banner-games.jpg"
+              title={gamesService?.name ?? ""}
+              text={gamesService?.tagline ?? ""}
+            />
+            <CgiGallery videos={getGameVideos(lang)} />
+          </motion.div>
+        ) : service === "360-virtual-tour" ? (
+          // tours 360° reales (3DVista): se recorren a pantalla completa dentro del sitio
+          <motion.div key="tours" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            {/* banner con video, como la portada de la página anterior de 360° */}
+            <VideoBanner
+              src1080="/media/tours/banner-360-1080.mp4"
+              src720="/media/tours/banner-360-720.mp4"
+              poster="/media/tours/banner-360.jpg"
+              title={tourService?.name ?? ""}
+              text={tourService?.tagline ?? ""}
+            />
+            <TourGallery tours={tours} />
           </motion.div>
         ) : (
           <motion.ul

@@ -1,39 +1,27 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
 import { GameEmbed } from "@/components/GameEmbed";
 import { PageHeader } from "@/components/PageHeader";
-import { ProjectLink } from "@/components/ProjectLink";
-import { Reveal } from "@/components/Reveal";
-import { VideoFacade } from "@/components/VideoFacade";
-import { games, getGameIn, getGameVideos, getGames } from "@/content/games";
-import { img } from "@/content/media";
-import { getSortedProjects } from "@/content/projects";
+import { games, getGameIn } from "@/content/games";
+import { getGameVideos as getGameVideoReels } from "@/content/game-videos";
+import { getVrVideos } from "@/content/vr-videos";
+import { CgiGallery, H, P } from "@/components/CgiGallery";
+import { VideoBanner } from "@/components/VideoBanner";
 import { getServiceIn } from "@/content/services";
 import { t } from "@/content/ui";
 import { route, type Locale } from "@/lib/i18n";
 import { pageMeta } from "./meta";
 
-// pósteres placeholder para los videos de Vimeo (Vimeo no expone miniatura sin API)
-const posters = [
-  img("/media/projects/torre-aurora/02.jpg", ""),
-  img("/media/projects/edificio-cumbre/03.jpg", ""),
-  img("/media/projects/terrazas-del-valle/04.jpg", ""),
-  img("/media/projects/casa-mirador/01.jpg", ""),
-];
-
 export const vrGamesMeta = (lang: Locale) => pageMeta(lang, "vrGames", { title: t(lang).nav.vrGames, description: t(lang).vrGames.description });
 
 /**
- * VR/Games = "Metaverse / VR" + "Video Juegos" del sitio actual:
- * 1) realidad virtual (proyectos con este servicio), 2) juegos jugables y gameplay.
+ * VR/Games = "Metaverse / VR" + "Video Juegos" de la página anterior:
+ * 1) realidad virtual: banner + experiencias VR (Vimeo), 2) juegos: videos + juego jugable.
  */
 export function VrGamesView({ lang }: { lang: Locale }) {
   const ui = t(lang);
   const service = getServiceIn("vr-games", lang);
-  const vrProjects = getSortedProjects(lang).filter((p) => p.services.includes("vr-games"));
   const parts = [
     { id: "vr", label: ui.vrGames.vr },
     { id: "juegos", label: ui.vrGames.games },
@@ -61,21 +49,23 @@ export function VrGamesView({ lang }: { lang: Locale }) {
           <h2 id="h-vr" className="display text-2xl md:text-3xl">{ui.vrGames.vr}</h2>
           <p className="max-w-xl text-ink-soft">{service?.body[0]}</p>
         </div>
-        <ul className="mt-8 grid gap-6 md:grid-cols-2">
-          {vrProjects.map((p) => (
-            <li key={p.slug}>
-              <ProjectLink slug={p.slug} morph={false} className="group block">
-                <div className="relative aspect-[3/2] overflow-hidden bg-paper-2">
-                  <Image src={p.cover.src} alt={p.cover.alt} fill quality={75} sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                </div>
-                <p className="mt-3 flex items-baseline justify-between gap-4">
-                  <span className="font-medium group-hover:underline group-hover:underline-offset-4">{p.title}</span>
-                  <span className="text-sm text-muted">{p.location} · {p.year}</span>
-                </p>
-              </ProjectLink>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8">
+          <VideoBanner
+            src1080="/media/vr/banner-vr-1080.mp4"
+            src720="/media/vr/banner-vr-720.mp4"
+            poster="/media/vr/banner-vr.jpg"
+            title={ui.vrGames.vr}
+            text={service?.tagline ?? ""}
+          />
+          <CgiGallery
+            videos={getVrVideos(lang)}
+            bento={false}
+            rows={[
+              [H, H],
+              [P, H, P],
+            ]}
+          />
+        </div>
       </section>
 
       {/* 2. Juegos */}
@@ -84,36 +74,16 @@ export function VrGamesView({ lang }: { lang: Locale }) {
           <h2 id="h-juegos" className="display text-2xl md:text-3xl">{ui.vrGames.games}</h2>
           <p className="max-w-xl text-ink-soft">{service?.body[1]}</p>
         </div>
-        <ul className="mt-8 grid gap-8">
-          {getGames(lang).map((g) => (
-            <li key={g.slug}>
-              <Link href={route(lang, "vrGames", `/${g.slug}`)} className="group grid overflow-hidden border border-line bg-paper-2 md:grid-cols-12">
-                <div className="relative aspect-video md:col-span-8">
-                  <Image src={g.cover.src} alt={g.cover.alt} fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover transition duration-[1.2s] group-hover:scale-[1.03]" />
-                </div>
-                <div className="flex flex-col justify-between gap-8 p-6 md:col-span-4 md:p-10">
-                  <div>
-                    <p className="eyebrow text-ink">{g.status === "jugable" ? ui.vrGames.playable : ui.vrGames.soon} · {g.engine.toUpperCase()}</p>
-                    <h3 className="display mt-2 text-2xl">{g.title}</h3>
-                    <p className="mt-4 text-ink-soft">{g.summary}</p>
-                  </div>
-                  <span className="inline-flex w-fit items-center gap-3 bg-ink px-6 py-4 text-sm text-paper">
-                    {ui.vrGames.play} <ArrowUpRight className="size-4" />
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8">
+          <CgiGallery videos={getGameVideoReels(lang)} />
+        </div>
+        {/* juego jugable en el navegador: espacio reservado hasta tener el juego real */}
+        <div className="mt-12 grid place-items-center border border-dashed border-line-strong bg-paper-2 px-6 py-20 text-center md:py-28">
+          <p className="text-xs uppercase tracking-[0.16em] text-muted">{ui.vrGames.playableTitle}</p>
+          <p className="display mt-3 text-3xl md:text-5xl">{ui.vrGames.soon}</p>
+          <p className="mt-3 max-w-md text-ink-soft">{ui.vrGames.soonText}</p>
+        </div>
 
-        <h3 className="mt-16 text-lg font-medium">{ui.vrGames.gameplay}</h3>
-        <ul className="mt-6 grid gap-6 md:grid-cols-2">
-          {getGameVideos(lang).map((v, i) => (
-            <Reveal as="li" key={i} delay={(i % 2) * 0.1}>
-              <VideoFacade video={v} fallbackPoster={posters[i % posters.length]} />
-            </Reveal>
-          ))}
-        </ul>
       </section>
     </div>
   );
