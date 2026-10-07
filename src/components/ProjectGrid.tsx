@@ -19,6 +19,8 @@ import { VideoBanner } from "./VideoBanner";
 import { CgiGallery } from "./CgiGallery";
 import { getCgiVideos } from "@/content/cgi";
 import { getGameVideos } from "@/content/game-videos";
+import { getAiVideos } from "@/content/ai-videos";
+import { Web3dShowcase } from "./Web3dShowcase";
 import { tours } from "@/content/tours";
 
 /*
@@ -71,6 +73,8 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
   const tourService = usedServices.find((s) => s.slug === "360-virtual-tour");
   const cgiService = usedServices.find((s) => s.slug === "cgi-animation");
   const gamesService = usedServices.find((s) => s.slug === "vr-games");
+  const aiService = usedServices.find((s) => s.slug === "ai");
+  const web3dService = usedServices.find((s) => s.slug === "web3d");
   const raw = new URLSearchParams(search).get("servicio");
   const service: ServiceSlug = usedServices.find((s) => s.slug === raw)?.slug ?? usedServices[0].slug;
   const filtered = projects.filter((p) => p.services.includes(service));
@@ -115,6 +119,30 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               text={gamesService?.tagline ?? ""}
             />
             <CgiGallery videos={getGameVideos(lang)} />
+          </motion.div>
+        ) : service === "ai" ? (
+          // inteligencia artificial (Vimeo), con el banner de video de la página anterior
+          <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            <VideoBanner
+              src1080="/media/ai/banner-ai-1080.mp4"
+              src720="/media/ai/banner-ai-720.mp4"
+              poster="/media/ai/banner-ai.jpg"
+              title={aiService?.name ?? ""}
+              text={aiService?.tagline ?? ""}
+            />
+            <CgiGallery videos={getAiVideos(lang)} />
+          </motion.div>
+        ) : service === "web3d" ? (
+          // Web3D: contenido de la página anterior (texto, video explicativo y ventajas con clips)
+          <motion.div key="web3d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+            <VideoBanner
+              src1080="/media/web3d/banner-web3d-1080.mp4"
+              src720="/media/web3d/banner-web3d-720.mp4"
+              poster="/media/web3d/banner-web3d.jpg"
+              title={web3dService?.name ?? ""}
+              text={web3dService?.tagline ?? ""}
+            />
+            <Web3dShowcase />
           </motion.div>
         ) : service === "360-virtual-tour" ? (
           // tours 360° reales (3DVista): se recorren a pantalla completa dentro del sitio

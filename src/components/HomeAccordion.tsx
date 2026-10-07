@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { withBase } from "@/lib/basePath";
 import { cn } from "@/lib/cn";
 import { navigateWithCurtain } from "@/lib/curtain";
 import type { MediaImage } from "@/content/types";
@@ -16,6 +17,8 @@ export type AccordionPanel = {
   cta: string;
   href: string;
   image: MediaImage;
+  /** video en bucle y sin sonido que se reproduce mientras el panel está abierto (al pasar por encima) */
+  video?: string;
 };
 
 /**
@@ -29,6 +32,9 @@ export type AccordionPanel = {
  *   con la cortina negra naciendo del panel (PageCurtain).
  * - Transiciones solo con CSS (flex-grow, opacidad); movimiento reducido las
  *   anula con la regla global.
+ * - Paneles con `video`: al abrirse (pasar por encima) se reproduce el video sobre la
+ *   foto; al cerrarse se pausa y vuelve a la foto. Cada video se descarga solo la
+ *   primera vez que se abre su panel.
  */
 export function HomeAccordion({ panels, label }: { panels: AccordionPanel[]; label: string }) {
   const [active, setActive] = useState(0);
@@ -74,6 +80,7 @@ export function HomeAccordion({ panels, label }: { panels: AccordionPanel[]; lab
                 open ? "scale-100 brightness-100" : "scale-110 brightness-[0.55]",
               )}
             />
+            {p.video && <PanelVideo src={p.video} playing={open} />}
             {/* degradado oscuro para leer el texto */}
             <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
 
@@ -110,5 +117,34 @@ export function HomeAccordion({ panels, label }: { panels: AccordionPanel[]; lab
         );
       })}
     </nav>
+  );
+}
+
+/** Video del panel: arranca cuando el panel se abre y se pausa (y se oculta) cuando se cierra. */
+function PanelVideo({ src, playing }: { src: string; playing: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (playing) v.play().catch(() => {});
+    else v.pause();
+  }, [playing]);
+
+  return (
+    <video
+      ref={ref}
+      src={withBase(src)}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-hidden
+      onPlaying={() => setShown(true)}
+      onPause={() => setShown(false)}
+      className="absolute inset-0 size-full object-cover transition-opacity duration-700 motion-reduce:hidden"
+      style={{ opacity: playing && shown ? 1 : 0 }}
+    />
   );
 }

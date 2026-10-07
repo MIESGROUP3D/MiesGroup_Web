@@ -6,6 +6,15 @@ import { t } from "@/content/ui";
 import { route, type Locale } from "@/lib/i18n";
 import { pageMeta } from "./meta";
 
+/** Video de cada panel de servicio (copias de los banners de la página anterior). Render 3D usa su foto real. */
+const homeVideos: Record<string, string | undefined> = {
+  "cgi-animation": "/media/cgi/banner-cgi-720.mp4",
+  "360-virtual-tour": "/media/tours/banner-360-720.mp4",
+  "vr-games": "/media/games/banner-games-720.mp4",
+  web3d: "/media/web3d/banner-web3d-720.mp4",
+  ai: "/media/ai/banner-ai-720.mp4",
+};
+
 export const homeMeta = (lang: Locale) =>
   pageMeta(lang, "home", {
     // título completo (sin la plantilla "%s · MIES Group")
@@ -35,6 +44,8 @@ export function HomeView({ lang }: { lang: Locale }) {
         // la página completa de VR/Juegos se abre desde el botón "Ver más" de esa categoría
         href: `${route(lang, "projects")}/?servicio=${s.slug}`,
         image: s.cover,
+        // video que se reproduce al pasar por encima (al abrirse el panel): los banners de cada categoría
+        video: homeVideos[s.slug],
       };
     }),
     {

@@ -30,7 +30,7 @@ export const services: Service[] = [
       "Producción completa: guion, previsualización, render, música y edición.",
     ],
     deliverables: ["Recorridos virtuales en video 4K", "Piezas cortas para redes", "Secuencias constructivas", "Edición, música y color"],
-    cover: img("/media/projects/terrazas-del-valle/01.jpg", "Fotograma de animación de edificio escalonado"),
+    cover: img("/media/cgi/banner-cgi.jpg", "Fotograma de animación CGI de MIES Group", 1920, 1080),
     legacyPath: "/cgi-animation/",
   },
   {
@@ -42,7 +42,7 @@ export const services: Service[] = [
       "Ideales para sala de ventas, pauta digital y seguimiento de obra.",
     ],
     deliverables: ["Panorámicas 360° renderizadas", "Hotspots e información por espacio", "Planta interactiva", "Compatible con visores VR"],
-    cover: img("/media/projects/pabellon-lago/02.jpg", "Vista de pabellón de vidrio junto a un lago"),
+    cover: img("/media/tours/banner-360.jpg", "Recorrido virtual 360° de ZOHO Manizales", 1920, 1080),
     legacyPath: "/360-virtual-tour/",
   },
   {
@@ -54,7 +54,7 @@ export const services: Service[] = [
       "Y videojuegos que corren directamente en el navegador, sin instalar nada: piezas jugables para marcas, lanzamientos y experiencias interactivas.",
     ],
     deliverables: ["Experiencias VR en tiempo real", "Showrooms virtuales", "Configuradores de acabados", "Videojuegos para navegador"],
-    cover: img("/media/projects/edificio-cumbre/03.jpg", "Torre de oficinas de noche con fachada iluminada"),
+    cover: img("/media/games/banner-games.jpg", "Fotograma de videojuego de MIES Group", 1920, 758),
     // en el sitio actual eran dos páginas: /metaverse-vr/ y /video-juegos/
     legacyPath: "/metaverse-vr/",
   },
@@ -67,7 +67,7 @@ export const services: Service[] = [
       "Pensado para que el comprador explore disponibilidad, vistas y áreas desde cualquier dispositivo.",
     ],
     deliverables: ["Masterplans interactivos", "Selector de unidades y disponibilidad", "Visores 3D embebibles", "Integración con CRM"],
-    cover: img("/media/projects/centro-empresarial-norte/02.jpg", "Complejo empresarial escalonado al atardecer"),
+    cover: img("/media/web3d/banner-web3d.jpg", "Plataforma Web3D de MIES Group", 1600, 632),
     legacyPath: "/que-es-web3d/",
   },
   {
@@ -79,7 +79,7 @@ export const services: Service[] = [
       "Integramos IA donde reduce tiempos sin sacrificar fidelidad al proyecto.",
     ],
     deliverables: ["Variantes rápidas de ambientación", "Exploración de conceptos", "Contenido para campañas", "Asistentes para sala de ventas"],
-    cover: img("/media/projects/casa-mirador/01.jpg", "Casa de vidrio iluminada de noche"),
+    cover: img("/media/ai/banner-ai.jpg", "Fotograma generado con inteligencia artificial por MIES Group", 1920, 758),
     legacyPath: "/ai/",
   },
 ];
