@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { withBase } from "@/lib/basePath";
@@ -31,20 +32,17 @@ export function Web3dShowcase() {
         </ul>
       </section>
 
-      {/* Video explicativo (con sonido: el visitante decide cuándo verlo) */}
-      <video
-        src={withBase(web3d.video.src)}
-        poster={withBase(web3d.video.poster)}
-        controls
-        playsInline
-        preload="none"
-        className="aspect-video w-full bg-ink-soft object-cover"
-      />
+      {/* Video explicativo (con sonido: el visitante decide cuándo verlo). El póster es
+          un next/image detrás del video (WebP del tamaño justo) en vez del atributo poster. */}
+      <div className="relative aspect-video w-full bg-ink-soft">
+        <Image src={withBase(web3d.video.poster)} alt="" fill sizes="100vw" className="object-cover" />
+        <video src={withBase(web3d.video.src)} controls playsInline preload="none" className="absolute inset-0 size-full object-cover" />
+      </div>
 
       {/* Tipologías */}
       <section className="grid items-center gap-6 py-12 md:grid-cols-12 md:py-16">
         <div className="md:col-span-7">
-          <InViewVideo src={web3d.typologies.video} poster={web3d.typologies.poster} className="aspect-video" />
+          <InViewVideo src={web3d.typologies.video} poster={web3d.typologies.poster} sizes="(min-width: 768px) 58vw, 100vw" className="aspect-video" />
         </div>
         <p className="px-1 leading-relaxed text-paper/80 md:col-span-5 md:px-4 md:text-lg">{tx(web3d.intro[1])}</p>
       </section>
@@ -58,7 +56,7 @@ export function Web3dShowcase() {
           {web3d.features.map((f, i) => (
             <li key={f.title.es} className="grid items-center gap-6 md:grid-cols-12">
               <div className={cn("md:col-span-7", i % 2 === 1 && "md:order-2 md:col-start-6")}>
-                {f.video && <InViewVideo src={f.video} poster={f.poster} className="aspect-video" />}
+                {f.video && <InViewVideo src={f.video} poster={f.poster} sizes="(min-width: 768px) 58vw, 100vw" className="aspect-video" />}
               </div>
               <div className={cn("px-1 md:col-span-5 md:px-4", i % 2 === 1 && "md:order-1 md:col-start-1")}>
                 <p className="text-sm tabular-nums text-paper/40">{String(i + 1).padStart(2, "0")}</p>
@@ -86,8 +84,9 @@ export function Web3dShowcase() {
 /**
  * Clip en bucle y sin sonido que arranca al verse en pantalla y se pausa al salir
  * (sigue donde iba). preload="none": un clip que nunca se ve no se descarga.
+ * El póster es un next/image detrás del video (WebP del tamaño justo, carga diferida).
  */
-function InViewVideo({ src, poster, className }: { src: string; poster?: string; className?: string }) {
+function InViewVideo({ src, poster, sizes, className }: { src: string; poster?: string; sizes: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
 
@@ -104,16 +103,18 @@ function InViewVideo({ src, poster, className }: { src: string; poster?: string;
   }, []);
 
   return (
-    <video
-      ref={ref}
-      src={reduced ? undefined : withBase(src)}
-      poster={poster ? withBase(poster) : undefined}
-      muted
-      loop
-      playsInline
-      preload="none"
-      aria-hidden
-      className={cn("w-full bg-ink-soft object-cover", className)}
-    />
+    <div className={cn("relative w-full overflow-hidden bg-ink-soft", className)}>
+      {poster && <Image src={withBase(poster)} alt="" fill sizes={sizes} className="object-cover" />}
+      <video
+        ref={ref}
+        src={reduced ? undefined : withBase(src)}
+        muted
+        loop
+        playsInline
+        preload="none"
+        aria-hidden
+        className="absolute inset-0 size-full object-cover"
+      />
+    </div>
   );
 }

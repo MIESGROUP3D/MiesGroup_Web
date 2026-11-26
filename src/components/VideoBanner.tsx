@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { withBase } from "@/lib/basePath";
@@ -9,7 +10,9 @@ import { useLang } from "@/lib/useLang";
  * Banner grande con video en bucle (sin sonido) y texto encima, como la portada
  * de la página anterior de 360° (miesgroup3d.com/360-virtual-tour).
  * - MP4 alojado en el sitio (copia del video de Bunny Stream): 1080p en pantallas
- *   grandes y 720p en móvil. El póster se ve mientras carga.
+ *   grandes y 720p en móvil. Mientras carga se ve el póster: un next/image detrás
+ *   del video (WebP del tamaño de la pantalla y con prioridad, porque es lo primero
+ *   que se ve), en vez del atributo poster, que siempre baja el JPG completo.
  * - El video trae franjas negras arriba y abajo: se amplía un poco para ocultarlas.
  * - Botón de pausa (accesibilidad: todo movimiento de más de 5 s debe poder detenerse).
  * - Con "reducir movimiento" activado no se reproduce solo.
@@ -35,7 +38,6 @@ export function VideoBanner({ src1080, src720, poster, title, text, logo }: { sr
         loop
         playsInline
         preload="metadata"
-        poster={withBase(poster)}
         onPlay={() => setPaused(false)}
         onPause={() => setPaused(true)}
         aria-hidden
@@ -44,8 +46,9 @@ export function VideoBanner({ src1080, src720, poster, title, text, logo }: { sr
         <source src={withBase(src720)} type="video/mp4" media="(max-width: 767px)" />
         <source src={withBase(src1080)} type="video/mp4" />
       </video>
-      {/* con "reducir movimiento" solo se ve el póster */}
-      <span aria-hidden className="absolute inset-0 -z-20 hidden bg-cover bg-center motion-reduce:block" style={{ backgroundImage: `url(${withBase(poster)})` }} />
+      {/* póster: se ve mientras carga el video y, con "reducir movimiento", en su lugar.
+          Misma ampliación que el video para que no salte al empezar a reproducirse. */}
+      <Image src={withBase(poster)} alt="" fill priority sizes="100vw" className="-z-20 scale-[1.08] object-cover motion-reduce:scale-100" />
       <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />
 
       <div className="w-full max-w-3xl p-5 md:p-10">
