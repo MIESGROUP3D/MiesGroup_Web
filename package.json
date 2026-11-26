@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "images": "node scripts/optimize-images.mjs",
+    "videos": "node scripts/compress-videos.mjs",
     "prebuild": "npm run images",
     "build": "next build",
     "start": "next start",

@@ -6,13 +6,20 @@ import { useRef, useState } from "react";
 import { withBase } from "@/lib/basePath";
 import { useLang } from "@/lib/useLang";
 
+/** Versión AV1 de un banner: banner-x-1080.mp4 → banner-x-1080-av1.mp4 */
+const av1 = (src: string) => src.replace(/\.mp4$/, "-av1.mp4");
+// perfil Main, 8 bits; nivel 5.0 para 1080p ultra ancho (2736×1080) y 4.0 para 720p
+const AV1_1080 = 'video/mp4; codecs="av01.0.12M.08"';
+const AV1_720 = 'video/mp4; codecs="av01.0.08M.08"';
+
 /**
  * Banner grande con video en bucle (sin sonido) y texto encima, como la portada
  * de la página anterior de 360° (miesgroup3d.com/360-virtual-tour).
  * - MP4 alojado en el sitio (copia del video de Bunny Stream): 1080p en pantallas
- *   grandes y 720p en móvil. Mientras carga se ve el póster: un next/image detrás
- *   del video (WebP del tamaño de la pantalla y con prioridad, porque es lo primero
- *   que se ve), en vez del atributo poster, que siempre baja el JPG completo.
+ *   grandes y 720p en móvil, cada uno en AV1 con respaldo H.264.
+ * - Mientras carga se ve el póster: un next/image detrás del video (WebP del tamaño
+ *   de la pantalla y con prioridad, porque es lo primero que se ve), en vez del
+ *   atributo poster, que siempre baja el JPG completo.
  * - El video trae franjas negras arriba y abajo: se amplía un poco para ocultarlas.
  * - Botón de pausa (accesibilidad: todo movimiento de más de 5 s debe poder detenerse).
  * - Con "reducir movimiento" activado no se reproduce solo.
@@ -43,7 +50,11 @@ export function VideoBanner({ src1080, src720, poster, title, text, logo }: { sr
         aria-hidden
         className="absolute inset-0 -z-10 size-full scale-[1.08] object-cover motion-reduce:hidden"
       >
+        {/* AV1 primero (~45 % más liviano); el navegador que no lo soporta usa H.264.
+            Las versiones -av1.mp4 las genera scripts/compress-videos.mjs (npm run videos). */}
+        <source src={withBase(av1(src720))} type={AV1_720} media="(max-width: 767px)" />
         <source src={withBase(src720)} type="video/mp4" media="(max-width: 767px)" />
+        <source src={withBase(av1(src1080))} type={AV1_1080} />
         <source src={withBase(src1080)} type="video/mp4" />
       </video>
       {/* póster: se ve mientras carga el video y, con "reducir movimiento", en su lugar.
