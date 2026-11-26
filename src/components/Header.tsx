@@ -65,10 +65,10 @@ export function Header() {
         )}
         {/* en el inicio el logo va en una píldora de vidrio (como la barra de categorías) para leerse sobre cualquier foto,
             con el lema de marca centrado debajo */}
-        <div className="relative">
-          <Link
-            href={route(lang, "home")}
-            aria-label={ui.homeAria}
+        {/* todo el bloque (píldora + lema) es UN solo enlace al inicio: antes el lema quedaba
+            fuera del enlace y un clic ahí caía en el panel del acordeón de abajo */}
+        <Link href={route(lang, "home")} aria-label={ui.homeAria} className="relative block">
+          <span
             className={cn(
               "block",
               overHome &&
@@ -76,13 +76,13 @@ export function Header() {
             )}
           >
             <Logo tone={overHome ? "home" : dark ? "light" : "dark"} />
-          </Link>
+          </span>
           {overHome && (
-            <p className="absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap text-[0.4375rem] uppercase tracking-[0.18em] text-paper/85 [text-shadow:0_1px_6px_rgb(0_0_0/0.5)]">
+            <span className="absolute left-1/2 top-full block -translate-x-1/2 whitespace-nowrap pt-2 text-[0.4375rem] uppercase tracking-[0.18em] text-paper/85 [text-shadow:0_1px_6px_rgb(0_0_0/0.5)]">
               {ui.tagline}
-            </p>
+            </span>
           )}
-        </div>
+        </Link>
       </div>
     </header>
   );

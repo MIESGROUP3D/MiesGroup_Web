@@ -9,14 +9,21 @@ import { localeFromPath, route, type RouteKey } from "./i18n";
 let stack: string[] = [];
 let goingBack = false;
 
-/** La cabecera lo llama en cada cambio de ruta. */
-export function recordPath(path: string) {
+const base = (p: string) => p.split("?")[0];
+
+/** La cabecera lo llama en cada cambio de ruta (`full` = ruta + ?filtro). */
+export function recordPath(full: string) {
   if (goingBack) {
     goingBack = false;
     stack.pop(); // la página que se dejó al volver
-    if (stack[stack.length - 1]?.split("?")[0] === path) return;
   }
-  if (stack[stack.length - 1]?.split("?")[0] !== path) stack.push(path);
+  // misma página que la actual (p. ej. el doble efecto de desarrollo, o solo cambió el ?filtro): no se duplica
+  const top = stack[stack.length - 1];
+  if (top && base(top) === base(full)) {
+    stack[stack.length - 1] = full;
+    return;
+  }
+  stack.push(full);
   if (stack.length > 50) stack = stack.slice(-50);
 }
 
@@ -37,7 +44,7 @@ function parentOf(path: string): string {
 
 /** A dónde lleva la flecha desde `path`; `fromHistory` = es la página anterior real. */
 export function backTarget(path: string): { href: string; fromHistory: boolean } {
-  const prev = stack.length >= 2 ? stack[stack.length - 2] : null;
+  const prev = stack.length >= 2 && base(stack[stack.length - 2]) !== base(path) ? stack[stack.length - 2] : null;
   return prev ? { href: prev, fromHistory: true } : { href: parentOf(path), fromHistory: false };
 }
 

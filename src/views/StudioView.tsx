@@ -124,7 +124,7 @@ function TeamMember({ member: m, big = false }: { member: ReturnType<typeof getT
             alt={m.photo.alt}
             fill
             quality={80}
-            sizes={big ? "180px" : "112px"}
+            sizes={big ? "240px" : "112px"}
             className="object-cover object-top grayscale transition-[filter,transform] duration-500 group-hover:scale-105 group-hover:grayscale-0"
           />
         ) : (

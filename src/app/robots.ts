@@ -7,7 +7,7 @@ export const dynamic = "force-static";
 /**
  * ⚠ MOCKUP: bloquea la indexación. En producción cambiar a:
  *   rules: { userAgent: "*", allow: "/", disallow: ["/api/"] }
- * y quitar `robots` de metadata en src/app/layout.tsx.
+ * y quitar `robots` de metadata en src/components/RootShell.tsx (rootMetadata).
  */
 export default function robots(): MetadataRoute.Robots {
   return {

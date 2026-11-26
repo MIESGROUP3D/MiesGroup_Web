@@ -18,7 +18,7 @@ export function ProjectsView({ lang }: { lang: Locale }) {
       <section className="bg-ink pb-20 text-paper md:pb-28" aria-labelledby="h-proyectos">
         {/* título centrado encima de la barra de categorías; en escritorio sube a la fila del logo */}
         <div className="shell">
-          <h1 id="h-proyectos" className="display relative pb-3 text-center text-xl md:-mt-[2.85rem] md:pb-4 md:text-2xl">
+          <h1 id="h-proyectos" className="display pointer-events-none relative mx-auto w-fit pb-3 text-center text-xl md:-mt-[2.85rem] md:pb-4 md:text-2xl">
             {ui.title}
           </h1>
         </div>

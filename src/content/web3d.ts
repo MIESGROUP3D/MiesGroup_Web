@@ -1,7 +1,7 @@
 import type { Locale } from "@/lib/i18n";
 
 /**
- * Web3D (categoría "Web3D" de Proyectos), con el contenido de la página anterior
+ * ORBITAL (categoría "ORBITAL" de Proyectos), con el contenido de la página anterior
  * (miesgroup3d.com/que-es-web3d): textos, video explicativo y un clip por ventaja.
  * Videos: copias de los de Bunny Stream alojadas en public/media/web3d/.
  *
@@ -17,8 +17,8 @@ const m = (name: string) => ({ video: `/media/web3d/${name}.mp4`, poster: `/medi
 export const web3d = {
   intro: [
     {
-      es: "Web3D ofrece una forma ágil, rápida e interactiva para recorrer y presentar proyectos inmobiliarios de manera muy visual. En pocos segundos, permite situar al cliente en su futura inversión inmobiliaria, explorando cada detalle del proyecto.",
-      en: "Web3D offers an agile, fast and interactive way to explore and present real estate projects in a highly visual way. In a few seconds it places the client in their future investment, exploring every detail of the project.",
+      es: "ORBITAL ofrece una forma ágil, rápida e interactiva para recorrer y presentar proyectos inmobiliarios de manera muy visual. En pocos segundos, permite situar al cliente en su futura inversión inmobiliaria, explorando cada detalle del proyecto.",
+      en: "ORBITAL offers an agile, fast and interactive way to explore and present real estate projects in a highly visual way. In a few seconds it places the client in their future investment, exploring every detail of the project.",
     },
     {
       es: "La plataforma se adapta a múltiples tipologías de proyectos, desde edificios de una torre, urbanizaciones de múltiples torres o barrios de casas, hasta hoteles, centros comerciales y oficinas. Su flexibilidad permite integrar cualquier arquitectura o diseño, desde proyectos de pocas unidades hasta desarrollos de miles de propiedades.",
@@ -33,7 +33,7 @@ export const web3d = {
   ] as T[],
   video: { src: "/media/web3d/web3d-video.mp4", poster: "/media/web3d/web3d-video.jpg" },
   typologies: m("tipologias"),
-  featuresTitle: { es: "Ventajas de Web3D", en: "Web3D advantages" } as T,
+  featuresTitle: { es: "Ventajas de ORBITAL", en: "ORBITAL advantages" } as T,
   features: [
     {
       title: { es: "Experiencia exterior realista", en: "Realistic exterior experience" },
@@ -46,8 +46,8 @@ export const web3d = {
     {
       title: { es: "Navega de manera intuitiva", en: "Intuitive navigation" },
       text: {
-        es: "Una navegación estilo videojuego permite entender el proyecto de una forma muy simple y visual. No es un sitio web tradicional: es un Web3D que hace que tu potencial cliente realmente entienda el proyecto y lo conozca hasta el último detalle. Tu showroom online 24/7.",
-        en: "Videogame-style navigation makes the project simple and visual to understand. It's not a traditional website: it's a Web3D that helps your prospects truly understand the project down to the last detail. Your 24/7 online showroom.",
+        es: "Una navegación estilo videojuego permite entender el proyecto de una forma muy simple y visual. No es un sitio web tradicional: es ORBITAL, el software que hace que tu potencial cliente realmente entienda el proyecto y lo conozca hasta el último detalle. Tu showroom online 24/7.",
+        en: "Videogame-style navigation makes the project simple and visual to understand. It's not a traditional website: it's ORBITAL, the software that helps your prospects truly understand the project down to the last detail. Your 24/7 online showroom.",
       },
       ...m("navega"),
     },
@@ -103,8 +103,8 @@ export const web3d = {
     {
       title: { es: "Integración con Analytics", en: "Analytics integration" },
       text: {
-        es: "Para que tus campañas tengan datos certeros, Web3D se integra con Google Analytics y el Pixel de Meta.",
-        en: "So your campaigns have accurate data, Web3D integrates with Google Analytics and the Meta Pixel.",
+        es: "Para que tus campañas tengan datos certeros, ORBITAL se integra con Google Analytics y el Pixel de Meta.",
+        en: "So your campaigns have accurate data, ORBITAL integrates with Google Analytics and the Meta Pixel.",
       },
     },
   ] as Web3dFeature[],

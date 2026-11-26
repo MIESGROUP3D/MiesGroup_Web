@@ -13,7 +13,7 @@ import type { Locale } from "@/lib/i18n";
  * a `thirdParties` en los DOS idiomas en el MISMO cambio.
  */
 
-export const privacyUpdated = "2026-09-25";
+export const privacyUpdated = "2026-11-26";
 
 type ThirdParty = { name: string; use: string; when: string; policy: string };
 
@@ -41,7 +41,7 @@ const es = {
     {
       what: "Almacenamiento en tu navegador",
       detail:
-        "Una sola marca en sessionStorage para no repetir la animación de entrada. No te identifica y se borra al cerrar la pestaña. No usamos cookies ni herramientas de analítica o publicidad.",
+        "Una sola marca en la pestaña del navegador (window.name) para no repetir la animación de entrada al recargar. No te identifica, no se envía a ningún servidor y desaparece al cerrar la pestaña. No usamos cookies ni herramientas de analítica o publicidad.",
     },
   ],
   onlyNeeded: "Solo pedimos lo necesario para responderte. Los datos del formulario los recogemos únicamente con tu autorización (la casilla que marcas antes de enviar).",
@@ -106,7 +106,7 @@ const en: Privacy = {
     {
       what: "Storage in your browser",
       detail:
-        "A single flag in sessionStorage so the intro animation doesn't repeat. It doesn't identify you and is deleted when you close the tab. We don't use cookies or analytics or advertising tools.",
+        "A single flag in the browser tab (window.name) so the intro animation doesn't repeat when you reload. It doesn't identify you, isn't sent to any server and disappears when you close the tab. We don't use cookies or analytics or advertising tools.",
     },
   ],
   onlyNeeded: "We only ask for what we need to answer you. Form data is collected only with your authorization (the box you check before sending).",

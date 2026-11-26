@@ -38,7 +38,7 @@ const es = {
   },
   projects: {
     title: "Proyectos",
-    description: "Portafolio de visualización arquitectónica: renders, animación CGI, tours 360°, realidad virtual, Web3D e IA.",
+    description: "Portafolio de visualización arquitectónica: renders, animación CGI, tours 360°, realidad virtual, ORBITAL e IA.",
     categories: "Categorías",
     badgeNew: "Nuevo",
     badgeFeatured: "Destacado",
@@ -87,7 +87,7 @@ const es = {
   },
   contact: {
     title: "Contacto",
-    description: "Cuéntanos de tu proyecto de visualización 3D, animación, tour 360°, VR o Web3D.",
+    description: "Cuéntanos de tu proyecto de visualización 3D, animación, tour 360°, VR o ORBITAL.",
     phones: "Teléfonos",
     offices: "Sedes",
     formTitle: "O escríbenos aquí",
@@ -159,7 +159,7 @@ const en: Dict = {
   },
   projects: {
     title: "Projects",
-    description: "Architectural visualization portfolio: renders, CGI animation, 360° tours, virtual reality, Web3D and AI.",
+    description: "Architectural visualization portfolio: renders, CGI animation, 360° tours, virtual reality, ORBITAL and AI.",
     categories: "Categories",
     badgeNew: "New",
     badgeFeatured: "Featured",
@@ -208,7 +208,7 @@ const en: Dict = {
   },
   contact: {
     title: "Contact",
-    description: "Tell us about your 3D visualization, animation, 360° tour, VR or Web3D project.",
+    description: "Tell us about your 3D visualization, animation, 360° tour, VR or ORBITAL project.",
     phones: "Phones",
     offices: "Offices",
     formTitle: "Or write to us here",

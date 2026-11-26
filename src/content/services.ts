@@ -60,14 +60,14 @@ export const services: Service[] = [
   },
   {
     slug: "web3d",
-    name: "Web3D",
-    tagline: "Modelos 3D interactivos directamente en la web.",
+    name: "ORBITAL",
+    tagline: "Maquetas virtuales interactivas en la web para constructoras e inmobiliarias.",
     body: [
       "Experiencias 3D que corren en el navegador: selectores de unidades, masterplans interactivos y visores de producto, sin descargas.",
       "Pensado para que el comprador explore disponibilidad, vistas y áreas desde cualquier dispositivo.",
     ],
     deliverables: ["Masterplans interactivos", "Selector de unidades y disponibilidad", "Visores 3D embebibles", "Integración con CRM"],
-    cover: img("/media/web3d/banner-web3d.jpg", "Plataforma Web3D de MIES Group", 1600, 632),
+    cover: img("/media/web3d/banner-web3d.jpg", "Plataforma ORBITAL de MIES Group", 1600, 632),
     legacyPath: "/que-es-web3d/",
   },
   {

@@ -7,7 +7,7 @@ import { useLang } from "@/lib/useLang";
 import { web3d } from "@/content/web3d";
 
 /**
- * Categoría Web3D (sobre el fondo negro de Proyectos), con el contenido de la página
+ * Categoría ORBITAL (sobre el fondo negro de Proyectos), con el contenido de la página
  * anterior: texto, video explicativo (con sonido, se reproduce al pulsar), ventajas en
  * filas alternadas con un clip cada una (en bucle y sin sonido al verse en pantalla)
  * y extras en tres columnas.

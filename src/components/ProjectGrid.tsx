@@ -133,7 +133,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             <CgiGallery videos={getAiVideos(lang)} />
           </motion.div>
         ) : service === "web3d" ? (
-          // Web3D: contenido de la página anterior (texto, video explicativo y ventajas con clips)
+          // ORBITAL: contenido de la página anterior (texto, video explicativo y ventajas con clips)
           <motion.div key="web3d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
             <VideoBanner
               src1080="/media/web3d/banner-web3d-1080.mp4"
@@ -141,6 +141,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               poster="/media/web3d/banner-web3d.jpg"
               title={web3dService?.name ?? ""}
               text={web3dService?.tagline ?? ""}
+              logo={{ src: "/brand/orbital-blanco.png", width: 1600, height: 381 }}
             />
             <Web3dShowcase />
           </motion.div>

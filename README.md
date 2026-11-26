@@ -124,7 +124,7 @@ Al ser estático, el mockup **no tiene**: redirecciones 301 de las URLs viejas d
 
 - [ ] Pasar a un hosting con servidor y recuperar redirecciones 301, headers, optimización de imágenes y el envío del formulario (ver "Publicación").
 
-- [ ] Quitar `robots: { index: false }` en `src/app/layout.tsx` y actualizar `src/app/robots.ts` (hoy bloquean la indexación a propósito).
+- [ ] Quitar `robots: { index: false }` en `src/components/RootShell.tsx` (rootMetadata) y actualizar `src/app/robots.ts` (hoy bloquean la indexación a propósito).
 - [ ] Reemplazar placeholders: renders, textos de servicios, proyectos, conferencias, textos de "Estudio".
 - [ ] Proyectos reales (`src/content/projects-real.ts`, renders copiados de la NAS): confirmar el permiso de cada constructora para publicarlos, la ciudad de cada proyecto (hoy "Colombia") y los textos. Los 6 proyectos de ejemplo quedan solo para las categorías sin material real.
 - [ ] Política de privacidad (`src/content/privacy.ts`): revisión legal, plazo de conservación de datos y lista de terceros al día (agregar el proveedor de correo y el hosting definitivo al salir del mockup).

@@ -17,3 +17,6 @@ export function pageMeta(
     openGraph: { locale: lang === "en" ? "en_US" : "es_CO", ...(images ? { images } : {}) },
   };
 }
+
+/** Páginas de fondo negro (Proyectos, Channel): la barra del navegador en el celular también va negra. */
+export const darkViewport = { themeColor: "#0a0a0a" };

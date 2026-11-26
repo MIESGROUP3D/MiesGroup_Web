@@ -14,7 +14,7 @@ import { useLang } from "@/lib/useLang";
  * - Botón de pausa (accesibilidad: todo movimiento de más de 5 s debe poder detenerse).
  * - Con "reducir movimiento" activado no se reproduce solo.
  */
-export function VideoBanner({ src1080, src720, poster, title, text }: { src1080: string; src720: string; poster: string; title: string; text: string }) {
+export function VideoBanner({ src1080, src720, poster, title, text, logo }: { src1080: string; src720: string; poster: string; title: string; text: string; logo?: { src: string; width: number; height: number } }) {
   const en = useLang() === "en";
   const ref = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
@@ -58,7 +58,15 @@ export function VideoBanner({ src1080, src720, poster, title, text }: { src1080:
           {paused ? <Play className="size-3.5" fill="currentColor" /> : <Pause className="size-3.5" fill="currentColor" />}
           {paused ? (en ? "Play" : "Reproducir") : en ? "Pause" : "Pausa"}
         </button>
-        <h2 className="display text-4xl leading-[1.02] md:text-7xl">{title}</h2>
+        {logo ? (
+          // logo en lugar del título (p. ej. ORBITAL); el título queda como texto alternativo
+          <h2>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={withBase(logo.src)} alt={title} width={logo.width} height={logo.height} className="h-auto w-64 md:w-[26rem]" />
+          </h2>
+        ) : (
+          <h2 className="display text-4xl leading-[1.02] md:text-7xl">{title}</h2>
+        )}
         <p className="mt-3 max-w-xl text-paper/80 md:text-lg">{text}</p>
       </div>
     </section>

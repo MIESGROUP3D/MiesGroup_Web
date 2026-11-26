@@ -7,7 +7,9 @@ import type { NextConfig } from "next";
  * - basePath: GitHub Pages publica en /MiesGroup_Web/. Llega por la variable
  *   NEXT_PUBLIC_BASE_PATH (la define el workflow); en local queda vacía.
  *   Las rutas de imágenes se prefijan con withBase() (src/lib/basePath.ts).
- * - images.unoptimized: sin servidor no hay optimización de imágenes.
+ * - images: sin servidor no hay optimización al vuelo; un loader propio
+ *   (src/lib/imageLoader.ts) usa las versiones WebP que genera
+ *   scripts/optimize-images.mjs antes del build (npm run images).
  * - trailingSlash: /estudio → /estudio/index.html (lo que GitHub Pages sirve).
  *
  * Quedaron fuera por ser un sitio estático (volver a agregarlos al pasar a un
@@ -21,13 +23,20 @@ const nextConfig: NextConfig = {
   basePath,
   trailingSlash: true,
 
-  // Oculta el botón "N" de Next.js en desarrollo (tapaba el hero en las demos).
-  // Los errores de compilación y de ejecución se siguen mostrando.
-  devIndicators: false,
+  // Botón "N" de Next.js en desarrollo (abajo a la izquierda): muestra errores, estado de la
+  // ruta y herramientas de depuración. Solo existe en `next dev`; el sitio publicado no lo tiene.
+  devIndicators: { position: "bottom-left" },
+
+  // 404 común a los dos layouts raíz (uno por idioma): src/app/global-not-found.tsx
+  experimental: { globalNotFound: true },
 
   images: {
-    unoptimized: true,
-    qualities: [75, 80],
+    loader: "custom",
+    loaderFile: "./src/lib/imageLoader.ts",
+    // anchos que existen en public/_img (ver WIDTHS en el loader y en el script)
+    deviceSizes: [640, 1080, 1600, 2400],
+    imageSizes: [320],
+    qualities: [60, 75, 80],
   },
 };
 

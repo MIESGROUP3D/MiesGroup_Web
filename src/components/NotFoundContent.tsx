@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-/** 404 bilingüe: en un sitio estático hay una sola página 404 para los dos idiomas. */
-export default function NotFound() {
+/** Contenido de la 404, bilingüe: en un sitio estático hay una sola página 404 para los dos idiomas (la usan src/app/global-not-found.tsx y los not-found de cada idioma). */
+export function NotFoundContent() {
   return (
     <section className="shell flex min-h-[60svh] flex-col justify-center">
       <p className="text-muted">404</p>

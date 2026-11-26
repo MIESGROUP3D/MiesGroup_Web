@@ -53,7 +53,7 @@ export const servicesEn: Record<ServiceSlug, { name?: string; tagline: string; b
     coverAlt: "Office tower at night with an illuminated facade",
   },
   web3d: {
-    tagline: "Interactive 3D models right on the web.",
+    tagline: "Interactive virtual scale models on the web for developers and builders.",
     body: [
       "3D experiences that run in the browser: unit selectors, interactive masterplans and product viewers, no downloads.",
       "Designed so buyers can explore availability, views and areas from any device.",
@@ -99,7 +99,7 @@ export const projectsEn: Record<string, ProjectEn> = {
     specs: { Software: "Unreal Engine · Pano2VR", Deliverables: "8 renders · 360° tour with 14 nodes" },
   },
   "terrazas-del-valle": {
-    summary: "Terraced housing complex. Web3D masterplan with availability per unit.",
+    summary: "Terraced housing complex. ORBITAL masterplan with availability per unit.",
     coverAlt: "Terrazas del Valle at golden hour",
     alts: ["Terrazas del Valle at golden hour", "Terrazas del Valle by day", "Terrazas del Valle at sunset", "Terrazas del Valle at night"],
     videoTitles: ["Terrazas del Valle — walkthrough"],
@@ -156,7 +156,7 @@ export const channelTitlesEn = [
 
 export const siteEn = {
   description:
-    "Architectural visualization 3D studio: photorealistic renders, CGI animation, 360° virtual tours, virtual reality, Web3D and AI for real estate and commercial projects.",
+    "Architectural visualization 3D studio: photorealistic renders, CGI animation, 360° virtual tours, virtual reality, ORBITAL and AI for real estate and commercial projects.",
   whatsappMessage: "Hi MIES Group! 👋 I'd like to talk about a new 3D visualization project.",
   countries: { Colombia: "Colombia", Argentina: "Argentina", "Estados Unidos": "United States" } as Record<string, string>,
   story: [

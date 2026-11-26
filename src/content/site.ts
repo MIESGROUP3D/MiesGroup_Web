@@ -15,7 +15,7 @@ export const site = {
   url: "https://miesgroup3d.com",
   tagline: "We make it happen, we make it exist",
   description:
-    "Estudio 3D de visualización arquitectónica: renders fotorrealistas, animación CGI, tours virtuales 360°, realidad virtual, Web3D e IA para proyectos inmobiliarios y comerciales.",
+    "Estudio 3D de visualización arquitectónica: renders fotorrealistas, animación CGI, tours virtuales 360°, realidad virtual, ORBITAL e IA para proyectos inmobiliarios y comerciales.",
   foundedYear: 2015,
 
   whatsapp: {

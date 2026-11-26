@@ -13,7 +13,7 @@ import type { Project, ProjectCategory } from "./types";
  */
 /**
  * Proyectos DE EJEMPLO (placeholder) que quedan solo para las categorías sin
- * material real todavía (Animación CGI, Tour 360°, VR/Juegos, Web3D, IA).
+ * material real todavía (Animación CGI, Tour 360°, VR/Juegos, ORBITAL, IA).
  * Se reemplazan a medida que el cliente entregue esos proyectos.
  */
 const sampleProjects: Project[] = [
@@ -63,7 +63,7 @@ const sampleProjects: Project[] = [
     year: 2025,
     category: "residencial",
     services: ["cgi-animation", "web3d"],
-    summary: "Conjunto escalonado de vivienda. Masterplan Web3D con disponibilidad por unidad.",
+    summary: "Conjunto escalonado de vivienda. Masterplan ORBITAL con disponibilidad por unidad.",
     featured: true,
     order: 13,
     cover: img("/media/projects/terrazas-del-valle/01.jpg", "Terrazas del Valle a la hora dorada"),
