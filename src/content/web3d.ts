@@ -76,36 +76,81 @@ export const web3d = {
       },
       ...m("descargas"),
     },
-    {
-      title: { es: "Módulo comercial para unidades", en: "Sales module for units" },
-      text: {
-        es: "Permite cargar varias listas de precios según distintas formas de pago y crear cotizaciones automáticas con diferentes porcentajes de cuota inicial y financiación. Agiliza la venta y da claridad a los inversionistas y al equipo comercial.",
-        en: "Load several price lists by payment plan and create automatic quotes with different down-payment and financing percentages. It speeds up sales and gives clarity to investors and the sales team.",
-      },
-      ...m("comercial"),
-    },
   ] as Web3dFeature[],
-  extras: [
-    {
-      title: { es: "Adaptable a todos los dispositivos", en: "Works on every device" },
-      text: {
-        es: "Diseño responsive para cualquier pantalla: pantallas táctiles, tablets, computadores y celulares, en showrooms, ferias o desde la casa del cliente.",
-        en: "Responsive design for any screen: touchscreens, tablets, computers and phones, in showrooms, fairs or from the client's home.",
-      },
+  /** Tarjeta de texto (sin clip) que completa la cuadrícula de ventajas */
+  devices: {
+    title: { es: "Adaptable a todos los dispositivos", en: "Works on every device" },
+    text: {
+      es: "Diseño responsive para cualquier pantalla: pantallas táctiles, tablets, computadores y celulares, en showrooms, ferias o desde la casa del cliente.",
+      en: "Responsive design for any screen: touchscreens, tablets, computers and phones, in showrooms, fairs or from the client's home.",
     },
-    {
-      title: { es: "Panel para vendedores", en: "Sales team panel" },
-      text: {
-        es: "Los vendedores gestionan el estado de cada unidad, con permisos para modificar estados, precios y más.",
-        en: "Salespeople manage each unit's status, with permissions to change statuses, prices and more.",
+  } as Web3dFeature,
+
+  /** Bloque "Para tu equipo de ventas": lo que diferencia a ORBITAL de un recorrido 3D */
+  sales: {
+    eyebrow: { es: "Para tu equipo de ventas", en: "For your sales team" } as T,
+    title: { es: "No solo se ve: también vende.", en: "It doesn't just look good: it sells." } as T,
+    text: {
+      es: "ORBITAL conecta la experiencia del comprador con la operación comercial: disponibilidad, precios y cotizaciones en el mismo lugar.",
+      en: "ORBITAL connects the buyer's experience with your sales operation: availability, prices and quotes in one place.",
+    } as T,
+    clip: m("comercial"),
+    items: [
+      {
+        title: { es: "Cotizaciones automáticas", en: "Automatic quotes" },
+        text: {
+          es: "Varias listas de precios según la forma de pago y cotizaciones con distintos porcentajes de cuota inicial y financiación.",
+          en: "Several price lists by payment plan and quotes with different down-payment and financing percentages.",
+        },
       },
-    },
-    {
-      title: { es: "Integración con Analytics", en: "Analytics integration" },
-      text: {
-        es: "Para que tus campañas tengan datos certeros, ORBITAL se integra con Google Analytics y el Pixel de Meta.",
-        en: "So your campaigns have accurate data, ORBITAL integrates with Google Analytics and the Meta Pixel.",
+      {
+        title: { es: "Panel para vendedores", en: "Sales team panel" },
+        text: {
+          es: "Los vendedores gestionan el estado de cada unidad, con permisos para modificar estados, precios y más.",
+          en: "Salespeople manage each unit's status, with permissions to change statuses, prices and more.",
+        },
       },
-    },
-  ] as Web3dFeature[],
+      {
+        title: { es: "Integración con Analytics", en: "Analytics integration" },
+        text: {
+          es: "Para que tus campañas tengan datos certeros, ORBITAL se integra con Google Analytics y el Pixel de Meta.",
+          en: "So your campaigns have accurate data, ORBITAL integrates with Google Analytics and the Meta Pixel.",
+        },
+      },
+    ] as Web3dFeature[],
+  },
+
+  /**
+   * Demo en vivo de un proyecto hecho con ORBITAL. null = la sección y el botón
+   * "Ver demo en vivo" no aparecen. Al poner el enlace:
+   * ⚠ agregar el dominio de la demo a los servicios externos de la política de
+   *   privacidad (src/content/privacy.ts, en los dos idiomas): recibe la IP del visitante.
+   */
+  demoUrl: null as string | null,
+
+  cta: {
+    demo: { es: "Agenda una demo", en: "Book a demo" } as T,
+    live: { es: "Ver demo en vivo", en: "See live demo" } as T,
+    tryIt: { es: "Probar la demo", en: "Try the demo" } as T,
+    watch: { es: "Ver el video de ORBITAL", en: "Watch the ORBITAL video" } as T,
+    newTab: { es: "Abrir en una pestaña nueva", en: "Open in a new tab" } as T,
+    liveTitle: { es: "Pruébalo tú mismo", en: "Try it yourself" } as T,
+    liveText: {
+      es: "Un proyecto real hecho con ORBITAL. Recórrelo, elige una unidad y mira cómo funciona.",
+      en: "A real project built with ORBITAL. Explore it, pick a unit and see how it works.",
+    } as T,
+    /** Mensaje de WhatsApp de "Agenda una demo" (se codifica al armar el enlace) */
+    whatsapp: {
+      es: "¡Hola MIES Group! Quiero agendar una demo de ORBITAL para un proyecto inmobiliario.",
+      en: "Hi MIES Group! I'd like to book an ORBITAL demo for a real estate project.",
+    } as T,
+    closingTitle: { es: "¿Tienes un proyecto en preventa?", en: "Have a project in pre-sale?" } as T,
+    closingText: {
+      es: "Te mostramos ORBITAL con un proyecto real y te ayudamos a planear el tuyo.",
+      en: "We'll show you ORBITAL with a real project and help you plan yours.",
+    } as T,
+    contact: { es: "Escríbenos", en: "Contact us" } as T,
+    close: { es: "Cerrar", en: "Close" } as T,
+    more: { es: "Ver más", en: "See more" } as T,
+  },
 };

@@ -24,7 +24,7 @@ const AV1_720 = 'video/mp4; codecs="av01.0.08M.08"';
  * - Botón de pausa (accesibilidad: todo movimiento de más de 5 s debe poder detenerse).
  * - Con "reducir movimiento" activado no se reproduce solo.
  */
-export function VideoBanner({ src1080, src720, poster, title, text, logo }: { src1080: string; src720: string; poster: string; title: string; text: string; logo?: { src: string; width: number; height: number } }) {
+export function VideoBanner({ src1080, src720, poster, title, text, logo, actions }: { src1080: string; src720: string; poster: string; title: string; text: string; logo?: { src: string; width: number; height: number }; actions?: React.ReactNode }) {
   const en = useLang() === "en";
   const ref = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
@@ -82,6 +82,8 @@ export function VideoBanner({ src1080, src720, poster, title, text, logo }: { sr
           <h2 className="display text-4xl leading-[1.02] md:text-7xl">{title}</h2>
         )}
         <p className="mt-3 max-w-xl text-paper/80 md:text-lg">{text}</p>
+        {/* botones opcionales bajo el texto (p. ej. ORBITAL: "Agenda una demo") */}
+        {actions && <div className="mt-6">{actions}</div>}
       </div>
     </section>
   );

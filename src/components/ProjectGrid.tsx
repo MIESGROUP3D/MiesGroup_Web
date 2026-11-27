@@ -20,7 +20,7 @@ import { CgiGallery } from "./CgiGallery";
 import { getCgiVideos } from "@/content/cgi";
 import { getGameVideos } from "@/content/game-videos";
 import { getAiVideos } from "@/content/ai-videos";
-import { Web3dShowcase } from "./Web3dShowcase";
+import { OrbitalActions, Web3dShowcase } from "./Web3dShowcase";
 import { tours } from "@/content/tours";
 
 /*
@@ -142,6 +142,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               title={web3dService?.name ?? ""}
               text={web3dService?.tagline ?? ""}
               logo={{ src: "/brand/orbital-blanco.png", width: 1600, height: 381 }}
+              actions={<OrbitalActions />}
             />
             <Web3dShowcase />
           </motion.div>
