@@ -77,12 +77,13 @@ export function HomeAccordion({ panels, label }: { panels: AccordionPanel[]; lab
               sizes="(min-width: 768px) 60vw, 100vw"
               className={cn(
                 "object-cover transition-[transform,filter] duration-1000 ease-[cubic-bezier(.39,.14,.26,1)]",
-                open ? "scale-100 brightness-100" : "scale-110 brightness-[0.55]",
+                open ? "scale-100 brightness-100" : "scale-110 brightness-[0.75]",
               )}
             />
             {p.video && <PanelVideo src={p.video} playing={open} />}
-            {/* degradado oscuro para leer el texto */}
-            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
+            {/* degradado solo abajo, donde va el texto: el resto de la imagen queda con su luz
+                (el logo de arriba ya tiene su propia píldora de fondo) */}
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 via-35% to-transparent to-60%" />
 
             {/* cerrado: nombre (vertical en escritorio) */}
             <span
@@ -92,7 +93,7 @@ export function HomeAccordion({ panels, label }: { panels: AccordionPanel[]; lab
                 open ? "opacity-0" : "opacity-100 delay-200",
               )}
             >
-              <span className="text-base font-medium md:mx-auto md:rotate-180 md:text-lg md:[writing-mode:vertical-rl]">{p.title}</span>
+              <span className="text-base font-medium [text-shadow:0_1px_10px_rgb(0_0_0/0.7)] md:mx-auto md:rotate-180 md:text-lg md:[writing-mode:vertical-rl]">{p.title}</span>
             </span>
 
             {/* abierto: etiqueta, título, descripción y llamada a la acción */}
